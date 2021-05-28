@@ -22,7 +22,7 @@ namespace WebStore_MVC.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            _logger = logger; 
         }
 
         public IActionResult Index()
@@ -36,7 +36,8 @@ namespace WebStore_MVC.Controllers
         }
 
         public IActionResult Employees()
-        {
+        {  
+            
             return View(_Employees);
         }
 

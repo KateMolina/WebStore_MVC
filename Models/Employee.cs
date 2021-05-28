@@ -10,6 +10,7 @@ namespace WebStore_MVC.Models
 
         public Employee()
         {
+        
         }
     }
 }
