@@ -40,7 +40,13 @@ namespace WebStore_MVC.Controllers
             
             return View(_Employees);
         }
+        public IActionResult EmployeeDetails(int id)
+        {
+            var employee = _Employees.FirstOrDefault(empl => empl.Id == id);
 
+            if (employee == null) return NotFound();
+            return View(employee);
+        }
      
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
