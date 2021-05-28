@@ -20,4 +20,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.9.227" />
     <PackageReference Include="BundleTransformer.ConfigurationIntelliSense" Version="1.12.32" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Shared\Partial\" />
+  </ItemGroup>
 </Project>
