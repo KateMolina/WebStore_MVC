@@ -29,8 +29,8 @@
             <td>@employee.LastName</td>
             <td>@employee.Age</td>
             <td>
-                <a asp-controller="Home" asp-action="EmployeeDetails" asp-route-id="@employee.Id">
-                edit
+                <a asp-action="Details" asp-route-id="@employee.Id">
+                info
                 </a>
             </td>
          </tr>
@@ -39,6 +39,6 @@
     </tbody>
   </table>
     <p>
-        <a asp-controller="Home" asp-action="Index">Main Page</a>
+        <a asp-controller="Employees" asp-action="Index">Main Page</a>
     </p>
 </div>

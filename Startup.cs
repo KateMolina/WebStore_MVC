@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore_MVC.Infrastructure;
+using WebStore_MVC.Infrastructure.Conventions;
 
 namespace WebStore_MVC
 {
@@ -26,7 +27,7 @@ namespace WebStore_MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt=>opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,38 +37,38 @@ namespace WebStore_MVC
             {
                 app.UseDeveloperExceptionPage();
             }
-            //  else
-            // {
-            //   app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //  app.UseHsts();
-            //}
-           // app.UseHttpsRedirection();
+            #region else
+            /* else
+             {
+                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days.You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+               app.UseHsts();
+             }*/
+            #endregion
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
-            app.UseMiddleware<TestMiddleWare>();
-            app.Use(async (context, next) => { await next(); });
-            app.Map("/TestMapRequest", opt => opt.Run(async context =>
-            { await Task.Delay(100);
-                var streamWriter = new StreamWriter(context.Response.Body);
-                await streamWriter.WriteAsync("Hello from TestMapRequest");
-            }
-            )) ;
+            #region MiddleWare options
+            //app.UseMiddleware<TestMiddleWare>();
+            //app.Use(async (context, next) => { await next(); });
+            //app.Map("/TestMapRequest", opt => opt.Run(async context =>
+            //{ await Task.Delay(100);
+            //    var streamWriter = new StreamWriter(context.Response.Body);
+            //    await streamWriter.WriteAsync("Hello from TestMapRequest");
+            //}
+            //)) ;
+            #endregion
 
             app.UseWelcomePage("/WelcomePage");
-           // app.UseAuthorization();
-
+            #region useAuthorization
+            // app.UseAuthorization();
+            #endregion
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/greeting", async context =>
                 {
                     await context.Response.WriteAsync(Configuration["Greeting"]);
                 });
-
-                
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

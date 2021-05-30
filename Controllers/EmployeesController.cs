@@ -3,16 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WebStore_MVC.Models;
 
 namespace WebStore_MVC.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Staff")]
     public class EmployeesController : Controller
     {
+        private static readonly List<Employee> _Employees = new()
+        {
+            new Employee { Id = 1, FirstName = "Mia", LastName = "Anderson", Age = 18 },
+            new Employee { Id = 2, FirstName = "Emma", LastName = "Branson", Age = 27 },
+            new Employee { Id = 3, FirstName = "Sam", LastName = "Davidson", Age = 34 }
+        };
+
+        [Route("all")]
+        public IActionResult Index() => View(_Employees);
+
+        [Route("info-id-{id}")]
+        public IActionResult Details(int id)
+        {
+            var employee = _Employees.FirstOrDefault(empl => empl.Id == id);
+
+            if (employee == null) return NotFound();
+            return View(employee);
+        }
+
+
         // GET: api/values
-        [HttpGet]
+       /* [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
@@ -41,6 +60,6 @@ namespace WebStore_MVC.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }*/
     }
 }
