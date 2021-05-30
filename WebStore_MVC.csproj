@@ -33,5 +33,7 @@
     <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />
     <Folder Include="Views\Employees\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 </Project>
