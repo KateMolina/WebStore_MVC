@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore_MVC.Infrastructure;
 
 namespace WebStore_MVC
 {
@@ -40,12 +42,22 @@ namespace WebStore_MVC
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             //  app.UseHsts();
             //}
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseMiddleware<TestMiddleWare>();
+            app.Use(async (context, next) => { await next(); });
+            app.Map("/TestMapRequest", opt => opt.Run(async context =>
+            { await Task.Delay(100);
+                var streamWriter = new StreamWriter(context.Response.Body);
+                await streamWriter.WriteAsync("Hello from TestMapRequest");
+            }
+            )) ;
+
+            app.UseWelcomePage("/WelcomePage");
+           // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
