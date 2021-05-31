@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore_MVC.Infrastructure;
 using WebStore_MVC.Infrastructure.Conventions;
+using WebStore_MVC.Services;
+using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC
 {
@@ -27,6 +29,7 @@ namespace WebStore_MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
             services.AddControllersWithViews(opt=>opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
         }
 

@@ -4,62 +4,101 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebStore_MVC.Models;
+using WebStore_MVC.Services.Interfaces;
+using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
-    [Route("Staff")]
+   // [Route("Staff")]
     public class EmployeesController : Controller
     {
-        private static readonly List<Employee> _Employees = new()
-        {
-            new Employee { Id = 1, FirstName = "Mia", LastName = "Anderson", Age = 18 },
-            new Employee { Id = 2, FirstName = "Emma", LastName = "Branson", Age = 27 },
-            new Employee { Id = 3, FirstName = "Sam", LastName = "Davidson", Age = 34 }
-        };
+        private readonly IEmployeesData _EmployeesData;
 
-        [Route("all")]
-        public IActionResult Index() => View(_Employees);
+        public EmployeesController(IEmployeesData employeesData) => _EmployeesData = employeesData;
+    
 
-        [Route("info-id-{id}")]
+        //[Route("all")]
+        public IActionResult Index() => View(_EmployeesData.GetAll());
+
+       // [Route("info-id-{id}")]
         public IActionResult Details(int id)
         {
-            var employee = _Employees.FirstOrDefault(empl => empl.Id == id);
+            var employee = _EmployeesData.Get(id);
 
             if (employee == null) return NotFound();
             return View(employee);
         }
 
+        public IActionResult Create(int id) => View("Edit", new EmployeeViewModel());
+
+//----------------------------------------
+        public IActionResult Edit(int? id)
+        {
+            if (id is null) return View(new EmployeeViewModel());
+            var employee = _EmployeesData.Get((int)id);
+            if (employee is null) return NotFound();
+
+            var viewModel = new EmployeeViewModel()
+            {
+                Id = employee.Id,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Age = employee.Age,
+        };
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(EmployeeViewModel Model)
+        {
+            var employee = new Employee()
+            {
+                Id = Model.Id,
+                FirstName = Model.FirstName,
+                LastName = Model.LastName,
+                Age=Model.Age,
+            };
+            if (employee.Id == 0) _EmployeesData.Add(employee);
+            else _EmployeesData.Update(employee);
+
+
+            return RedirectToAction("Index");
+        }
+//-----------------------------------------------
+        public IActionResult Delete() => View();
 
         // GET: api/values
-       /* [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        /* [HttpGet]
+         public IEnumerable<string> Get()
+         {
+             return new string[] { "value1", "value2" };
+         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+         // GET api/values/5
+         [HttpGet("{id}")]
+         public string Get(int id)
+         {
+             return "value";
+         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+         // POST api/values
+         [HttpPost]
+         public void Post([FromBody] string value)
+         {
+         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+         // PUT api/values/5
+         [HttpPut("{id}")]
+         public void Put(int id, [FromBody] string value)
+         {
+         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
+         // DELETE api/values/5
+         [HttpDelete("{id}")]
+         public void Delete(int id)
+         {
+         }*/
     }
 }

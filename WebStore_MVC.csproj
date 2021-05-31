@@ -35,5 +35,6 @@
     <Folder Include="Views\Employees\" />
     <Folder Include="Services\" />
     <Folder Include="Services\Interfaces\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>
