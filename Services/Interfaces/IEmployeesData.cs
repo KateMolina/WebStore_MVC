@@ -10,7 +10,7 @@ namespace WebStore_MVC.Services.Interfaces
 
         Employee Get(int id);
 
-        int Add(Employee employee);
+        void Add(Employee employee);
 
         void Update(Employee employee);
 

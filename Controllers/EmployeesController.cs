@@ -31,7 +31,7 @@ namespace WebStore_MVC.Controllers
 
         public IActionResult Create(int id) => View("Edit", new EmployeeViewModel());
 
-//----------------------------------------
+
         public IActionResult Edit(int? id)
         {
             if (id is null) return View(new EmployeeViewModel());
@@ -66,7 +66,6 @@ namespace WebStore_MVC.Controllers
 
             return RedirectToAction("Index");
         }
-        //-----------------------------------------------
 
 
         public IActionResult Delete(int id)

@@ -22,13 +22,13 @@ namespace WebStore_MVC.Services
         }
         public IEnumerable<Employee> GetAll() => _Employees;
 
-        public int Add(Employee employee)
+        public void Add(Employee employee)
         {
             if (employee is null) throw new ArgumentNullException(nameof(employee));
-            if (_Employees.Contains(employee)) return employee.Id;
+            //if (_Employees.Contains(employee)) return employee.Id;
             employee.Id = ++_CurrentMaxId;
             _Employees.Add(employee);
-            return employee.Id;
+           // return employee.Id;
         }
 
         public Employee Get(int id) => _Employees.SingleOrDefault(employee => employee.Id == id);
