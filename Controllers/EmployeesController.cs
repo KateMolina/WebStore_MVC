@@ -66,39 +66,34 @@ namespace WebStore_MVC.Controllers
 
             return RedirectToAction("Index");
         }
-//-----------------------------------------------
-        public IActionResult Delete() => View();
+        //-----------------------------------------------
 
-        // GET: api/values
-        /* [HttpGet]
-         public IEnumerable<string> Get()
-         {
-             return new string[] { "value1", "value2" };
-         }
 
-         // GET api/values/5
-         [HttpGet("{id}")]
-         public string Get(int id)
-         {
-             return "value";
-         }
+        public IActionResult Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            var employee = _EmployeesData.Get(id);
 
-         // POST api/values
-         [HttpPost]
-         public void Post([FromBody] string value)
-         {
-         }
+            if (employee is null) return NotFound();
 
-         // PUT api/values/5
-         [HttpPut("{id}")]
-         public void Put(int id, [FromBody] string value)
-         {
-         }
+            return View(new EmployeeViewModel()
+            {
+            Id=employee.Id,
+            FirstName = employee.FirstName,
+            LastName=employee.LastName,
+            Age=employee.Age,
+            });
+        }
 
-         // DELETE api/values/5
-         [HttpDelete("{id}")]
-         public void Delete(int id)
-         {
-         }*/
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _EmployeesData.Delete(id);
+
+            return RedirectToAction("Index");
+        }
+
+
+
     }
 }
