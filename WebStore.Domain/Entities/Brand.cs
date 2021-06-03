@@ -1,10 +1,11 @@
 ﻿using System;
+using WebStore.Domain.Entities.Base;
+using WebStore.Domain.Entities.Base.Interfaces;
+
 namespace WebStore.Domain.Entities
 {
-    public class Brand
+    public class Brand : NamedEntity, IOrderedEntity
     {
-        public Brand()
-        {
-        }
+        public int Order { get; set; }
     }
 }
