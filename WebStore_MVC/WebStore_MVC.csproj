@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="AspNetCore.Mvc.ViewComponentSlots" Version="0.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.6" />
+    <PackageReference Include="AspNetCore.ClassicBundles.TagHelpers" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Partial\" />
@@ -37,9 +38,16 @@
     <Folder Include="Services\Interfaces\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Data\" />
+    <Folder Include="Components\" />
+    <Folder Include="Views\Shared\Components\" />
+    <Folder Include="Views\Shared\Components\Sections\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Data\" />
+    <None Remove="Components\" />
+    <None Remove="Views\Shared\Components\" />
+    <None Remove="Views\Shared\Components\Sections\" />
+    <None Remove="AspNetCore.ClassicBundles.TagHelpers" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebStore.Domain\WebStore.Domain.csproj">
