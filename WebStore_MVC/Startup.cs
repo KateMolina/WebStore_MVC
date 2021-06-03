@@ -30,6 +30,7 @@ namespace WebStore_MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+            services.AddSingleton<IProductData, InMemoryProductData>();
             services.AddControllersWithViews(opt=>opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
         }
 
