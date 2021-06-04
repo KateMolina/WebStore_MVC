@@ -34,6 +34,7 @@ namespace WebStore_MVC.Components
                 var childs = sections.Where(s => s.ParentId == parent_section.Id);
 
                 foreach (var child_section in childs)
+                {
                     parent_section.ChildSections.Add(new SectionViewModel
                     {
                         Id = child_section.Id,
@@ -41,6 +42,7 @@ namespace WebStore_MVC.Components
                         Order = child_section.Order,
                         Parent = parent_section,
                     });
+                }
 
                 parent_section.ChildSections.Sort((a, b) => Comparer<int>.Default.Compare(a.Order, b.Order));
             }

@@ -41,6 +41,7 @@
     <Folder Include="Components\" />
     <Folder Include="Views\Shared\Components\" />
     <Folder Include="Views\Shared\Components\Sections\" />
+    <Folder Include="Views\Shared\Components\Brands\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Data\" />
@@ -48,6 +49,7 @@
     <None Remove="Views\Shared\Components\" />
     <None Remove="Views\Shared\Components\Sections\" />
     <None Remove="AspNetCore.ClassicBundles.TagHelpers" />
+    <None Remove="Views\Shared\Components\Brands\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebStore.Domain\WebStore.Domain.csproj">
