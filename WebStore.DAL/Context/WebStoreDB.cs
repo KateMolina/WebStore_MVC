@@ -4,7 +4,7 @@ using WebStore.Domain.Entities;
 
 namespace WebStore.DAL.Context
 {
-    public class WebStroreDB:DbContext
+    public class WebStoreDB:DbContext
     {
         public DbSet<Product> Products { get; set; }
 
@@ -12,7 +12,7 @@ namespace WebStore.DAL.Context
 
         DbSet<Section> Sections { get; set; }
 
-        public WebStroreDB(DbContextOptions<WebStroreDB> options):base(options)
+        public WebStoreDB(DbContextOptions<WebStoreDB> options):base(options)
         {
             //git 1.5
         }
