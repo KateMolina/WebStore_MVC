@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebStore_MVC.Data;
@@ -11,10 +12,12 @@ namespace WebStore_MVC.Services
     {
         
         private int _CurrentMaxId;
+        private readonly ILogger<InMemoryEmployeesData> _logger;
 
-        public InMemoryEmployeesData()
+        public InMemoryEmployeesData(ILogger<InMemoryEmployeesData>logger)
         {
             _CurrentMaxId = TestData.Employees.Max(i => i.Id);
+            _logger = logger;
         }
         public IEnumerable<Employee> GetAll() => TestData.Employees;
 
@@ -24,6 +27,7 @@ namespace WebStore_MVC.Services
             if (TestData.Employees.Contains(employee)) return employee.Id;
             employee.Id = ++_CurrentMaxId;
             TestData.Employees.Add(employee);
+            _logger.LogInformation("Employee {} has been added", employee.Id);
             return employee.Id;
         }
 
@@ -39,13 +43,28 @@ namespace WebStore_MVC.Services
             dbItem.LastName = employee.LastName;
             dbItem.FirstName = employee.FirstName;
             dbItem.Age = employee.Age;
+            _logger.LogInformation("Employee {} has been updated", employee.Id);
+
         }
 
         public bool Delete(int id)
         {
             var dbItem = Get(id);
-            if (dbItem is null) return false;
-            return TestData.Employees.Remove(dbItem);
+            if (dbItem is null) 
+            {
+                _logger.LogWarning("Deleting employee {} - id not found", id);
+                return false; 
+            }
+            var result = TestData.Employees.Remove(dbItem);
+            if (result)
+            {
+                _logger.LogInformation("Employee {} has been removed", id);
+            }
+            else
+            {
+                _logger.LogError("Problems while deleting employee {} - id not found", id);
+            }
+            return result;
 
         }
 

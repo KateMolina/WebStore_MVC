@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.DAL.Context;
@@ -19,13 +20,14 @@ namespace WebStore_MVC.Data
         }
         public void Initialize()
         {
+            var timer = Stopwatch.StartNew();
             _Logger.LogInformation("Initialization has started...");
 
             if (_DB.Database.GetPendingMigrations().Any())
             {
                 _Logger.LogInformation("DB Migration is running...");
                 _DB.Database.Migrate();
-                _Logger.LogInformation("DB Migration completed.");
+                _Logger.LogInformation("DB Migration completed for {}", timer.Elapsed.TotalSeconds);
             }
             else
             {
@@ -42,12 +44,13 @@ namespace WebStore_MVC.Data
 
                 throw;
             }
-            _Logger.LogInformation("DB Initialization has completed");
+            _Logger.LogInformation("DB Initialization has completed fot the total of {}", timer.Elapsed.TotalSeconds);
 
         }
 
         public void InitializeProducts()
         {
+            var timer = Stopwatch.StartNew();
             if (_DB.Products.Any())
             {
                 _Logger.LogInformation("The DB doesn't need to initialize products");
@@ -63,7 +66,7 @@ namespace WebStore_MVC.Data
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] OFF");
                 _DB.Database.CommitTransaction();
             }
-            _Logger.LogInformation("Sections initialization Completed");
+            _Logger.LogInformation("Sections initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
             _Logger.LogInformation("Brands initialization skipped");
 
@@ -75,7 +78,7 @@ namespace WebStore_MVC.Data
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
                 _DB.Database.CommitTransaction();
             }
-            _Logger.LogInformation("Brands initialization Completed");
+            _Logger.LogInformation("Brands initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
             _Logger.LogInformation("Products initialization skipped");
 
@@ -87,7 +90,7 @@ namespace WebStore_MVC.Data
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
                 _DB.Database.CommitTransaction();
             }
-            _Logger.LogInformation("Products initialization Completed");
+            _Logger.LogInformation("Products initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
@@ -13,9 +14,13 @@ namespace WebStore_MVC.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeesData _EmployeesData;
+        private readonly ILogger _logger;
 
-        public EmployeesController(IEmployeesData employeesData) => _EmployeesData = employeesData;
-    
+        public EmployeesController(IEmployeesData employeesData, ILogger<EmployeesController> logger)
+        {
+            _EmployeesData = employeesData;
+            _logger = logger;
+        }
 
         //[Route("all")]
         public IActionResult Index() => View(_EmployeesData.GetAll());
@@ -55,6 +60,8 @@ namespace WebStore_MVC.Controllers
         {
             if (!ModelState.IsValid) return View(Model);
 
+            _logger.LogInformation("Updating details of the employee by id {}", Model.Id);
+
             var employee = new Employee()
             {
                 Id = Model.Id,
@@ -65,6 +72,7 @@ namespace WebStore_MVC.Controllers
             if (employee.Id == 0) _EmployeesData.Add(employee);
             else _EmployeesData.Update(employee);
 
+            _logger.LogInformation("Updating details of the employee by id {} completed", Model.Id);
 
             return RedirectToAction("Index");
         }
@@ -89,8 +97,9 @@ namespace WebStore_MVC.Controllers
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
+            _logger.LogInformation("Deletion of the employee by id {}", id);
             _EmployeesData.Delete(id);
-
+            _logger.LogInformation("Deletion of the employee by id {} has been completed", id);
             return RedirectToAction("Index");
         }
 

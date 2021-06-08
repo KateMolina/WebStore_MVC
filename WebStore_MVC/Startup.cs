@@ -17,6 +17,7 @@ using WebStore_MVC.Data;
 using WebStore_MVC.Infrastructure;
 using WebStore_MVC.Infrastructure.Conventions;
 using WebStore_MVC.Services;
+using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC
@@ -34,14 +35,12 @@ namespace WebStore_MVC
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
             services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("MSSQL")));
             services.AddTransient<WebStoreDBInitializer>();
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            services.AddSingleton<IProductData, InMemoryProductData>();
-
-            //services.AddScoped<ITestService, TestService>();
-            //services.AddScoped<IPrinter, DebuPrinter>();
-            services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddScoped<IProductData, SqlProductData>();
+            //services.AddSingleton<IProductData, InMemoryProductData>();
         }
 
 
