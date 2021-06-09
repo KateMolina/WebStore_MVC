@@ -22,7 +22,7 @@ namespace WebStore_MVC.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            _logger = logger; 
         }
 
         public IActionResult Index()
@@ -36,11 +36,35 @@ namespace WebStore_MVC.Controllers
         }
 
         public IActionResult Employees()
-        {
+        {  
+            
             return View(_Employees);
         }
+        public IActionResult EmployeeDetails(int id)
+        {
+            var employee = _Employees.FirstOrDefault(empl => empl.Id == id);
 
-     
+            if (employee == null) return NotFound();
+            return View(employee);
+        }
+        public IActionResult Blog() => View();
+
+        public IActionResult BlogSingle() => View();
+
+        public IActionResult NotFound404() => View();
+
+        public IActionResult Cart() => View();
+
+        public IActionResult Checkout() => View();
+        
+        public IActionResult ContactUs() => View();
+
+        public IActionResult Login() => View();
+
+        public IActionResult ProductDetails() => View();
+
+        public IActionResult Shop() => View();
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

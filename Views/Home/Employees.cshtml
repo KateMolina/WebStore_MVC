@@ -2,17 +2,21 @@
 @{
     ViewData["Title"] = "Employees";
 }
-<h1>@ViewData["Title"]</h1>
 
-<hr />
-<table>
+<div class="Container"> 
+    <h3>@ViewData["Title"]</h3>
+
+    <hr />
+  <table class="table">
+
     <thead>
         <tr>
             <th>#</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Age</th>
-            
+            <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -24,11 +28,17 @@
             <td>@employee.FirstName</td>
             <td>@employee.LastName</td>
             <td>@employee.Age</td>
+            <td>
+                <a asp-controller="Home" asp-action="EmployeeDetails" asp-route-id="@employee.Id">
+                edit
+                </a>
+            </td>
          </tr>
         }
     
     </tbody>
-</table>
-<p>
-    <a href="/">Main Page</a>
-</p>
+  </table>
+    <p>
+        <a asp-controller="Home" asp-action="Index">Main Page</a>
+    </p>
+</div>
