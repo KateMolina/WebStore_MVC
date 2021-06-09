@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebStore.Domain.Entities;
 using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
@@ -46,7 +47,7 @@ namespace WebStore_MVC.Controllers
             var viewModel = new EmployeeViewModel()
             {
                 Id = employee.Id,
-                FirstName = employee.FirstName,
+                FirstName = employee.Name,
                 LastName = employee.LastName,
                 Age = employee.Age,
         };
@@ -65,7 +66,7 @@ namespace WebStore_MVC.Controllers
             var employee = new Employee()
             {
                 Id = Model.Id,
-                FirstName = Model.FirstName,
+                Name = Model.FirstName,
                 LastName = Model.LastName,
                 Age=Model.Age,
             };
@@ -88,7 +89,7 @@ namespace WebStore_MVC.Controllers
             return View(new EmployeeViewModel()
             {
             Id=employee.Id,
-            FirstName = employee.FirstName,
+            FirstName = employee.Name,
             LastName=employee.LastName,
             Age=employee.Age,
             });

@@ -37,6 +37,7 @@ namespace WebStore_MVC.Data
             try
             {
                 InitializeProducts();
+                InitializeEmployees();
             }
             catch (Exception e)
             {
@@ -92,6 +93,22 @@ namespace WebStore_MVC.Data
             }
             _Logger.LogInformation("Products initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
+        }
+        public void InitializeEmployees()
+        {
+            if (_DB.Employees.Any())
+            {
+                return;
+            }
+            using (_DB.Database.BeginTransaction())
+            {
+                _DB.AddRange(TestData.Employees);
+                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] ON");
+                _DB.SaveChanges();
+                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] OFF");
+                _DB.Database.CommitTransaction();
+
+            }
         }
 
     }
