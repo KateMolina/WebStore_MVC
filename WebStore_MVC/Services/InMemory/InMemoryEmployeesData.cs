@@ -5,6 +5,7 @@ using System.Linq;
 using WebStore_MVC.Data;
 using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
+using WebStore.Domain.Entities;
 
 namespace WebStore_MVC.Services
 {
@@ -41,7 +42,7 @@ namespace WebStore_MVC.Services
             if (dbItem is null) return;
 
             dbItem.LastName = employee.LastName;
-            dbItem.FirstName = employee.FirstName;
+            dbItem.Name = employee.Name;
             dbItem.Age = employee.Age;
             _logger.LogInformation("Employee {} has been updated", employee.Id);
 
