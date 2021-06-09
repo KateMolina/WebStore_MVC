@@ -3,44 +3,96 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WebStore_MVC.Models;
+using WebStore_MVC.Services.Interfaces;
+using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
-    [Route("api/[controller]")]
+   // [Route("Staff")]
     public class EmployeesController : Controller
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IEmployeesData _EmployeesData;
+
+        public EmployeesController(IEmployeesData employeesData) => _EmployeesData = employeesData;
+    
+
+        //[Route("all")]
+        public IActionResult Index() => View(_EmployeesData.GetAll());
+
+       // [Route("info-id-{id}")]
+        public IActionResult Details(int id)
         {
-            return new string[] { "value1", "value2" };
+            var employee = _EmployeesData.Get(id);
+
+            if (employee == null) return NotFound();
+            return View(employee);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Create(int id) => View("Edit", new EmployeeViewModel());
+
+
+        public IActionResult Edit(int? id)
         {
-            return "value";
+            if (id is null) return View(new EmployeeViewModel());
+            var employee = _EmployeesData.Get((int)id);
+            if (employee is null) return NotFound();
+
+            var viewModel = new EmployeeViewModel()
+            {
+                Id = employee.Id,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Age = employee.Age,
+        };
+
+            return View(viewModel);
         }
 
-        // POST api/values
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Edit(EmployeeViewModel Model)
         {
+            var employee = new Employee()
+            {
+                Id = Model.Id,
+                FirstName = Model.FirstName,
+                LastName = Model.LastName,
+                Age=Model.Age,
+            };
+            if (employee.Id == 0) _EmployeesData.Add(employee);
+            else _EmployeesData.Update(employee);
+
+
+            return RedirectToAction("Index");
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        public IActionResult Delete(int id)
         {
+            if (id <= 0) return BadRequest();
+            var employee = _EmployeesData.Get(id);
+
+            if (employee is null) return NotFound();
+
+            return View(new EmployeeViewModel()
+            {
+            Id=employee.Id,
+            FirstName = employee.FirstName,
+            LastName=employee.LastName,
+            Age=employee.Age,
+            });
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
         {
+            _EmployeesData.Delete(id);
+
+            return RedirectToAction("Index");
         }
+
+
+
     }
 }

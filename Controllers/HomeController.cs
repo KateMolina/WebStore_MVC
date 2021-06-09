@@ -11,13 +11,7 @@ namespace WebStore_MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly List<Employee> _Employees = new()
-        {
-            new Employee { Id = 1, FirstName = "Mia", LastName = "Anderson", Age = 18 },
-            new Employee { Id = 2, FirstName = "Emma", LastName = "Branson", Age = 27 },
-            new Employee { Id = 3, FirstName = "Sam", LastName = "Davidson", Age = 34 }
-        };
-
+        
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -35,18 +29,8 @@ namespace WebStore_MVC.Controllers
             return View();
         }
 
-        public IActionResult Employees()
-        {  
-            
-            return View(_Employees);
-        }
-        public IActionResult EmployeeDetails(int id)
-        {
-            var employee = _Employees.FirstOrDefault(empl => empl.Id == id);
-
-            if (employee == null) return NotFound();
-            return View(employee);
-        }
+       
+        
         public IActionResult Blog() => View();
 
         public IActionResult BlogSingle() => View();
