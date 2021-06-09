@@ -1,0 +1,33 @@
+﻿@using WebStore_MVC.Services.Interfaces
+@using WebStore_MVC.ViewModels
+@inject IProductData _ProductData
+@{
+    var products = _ProductData.GetProducts().Take(9).Select(p => new ProductViewModel
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Price = p.Price,
+        ImageUrl = p.ImageUrl,
+    });
+}
+
+
+<partial name="Partial/_Slider" />
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+              <partial name="Partial/_LeftSlideBar" />
+            </div>
+
+            <div class="col-sm-9 padding-right">
+               <partial name="Partial/_FeaturedItems" model="products"/>
+
+                <partial name="Partial/_CategoryTab" />
+
+                <partial name="Partial/_RecommendedItems" />
+
+            </div>
+        </div>
+    </div>
+</section>
