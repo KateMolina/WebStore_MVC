@@ -10,13 +10,11 @@ namespace WebStore_MVC.Services.InSql
 {
     public class SqlEmployeesData : IEmployeesData
     {
-        public WebStoreDB _db;
-        int currentMaxId;
+        private readonly WebStoreDB _db;
 
         public SqlEmployeesData(WebStoreDB db)
         {
             _db = db;
-            currentMaxId = _db.Employees.Max(item => item.Id);
         }
 
         public IEnumerable<Employee> GetAll() => _db.Employees;
@@ -25,9 +23,8 @@ namespace WebStore_MVC.Services.InSql
         public int Add(Employee employee)
         {
             if (employee is null) throw new ArgumentNullException(nameof(employee));
-            if (_db.Employees.Contains(employee)) return employee.Id;
-            employee.Id=currentMaxId++;
             _db.Employees.Add(employee);
+            _db.SaveChanges();
             return employee.Id;
         }
         public Employee Get(int id)
@@ -41,18 +38,17 @@ namespace WebStore_MVC.Services.InSql
         public void Update(Employee employee)
         {
             if (employee is null) throw new ArgumentNullException(nameof(employee));
-            if (_db.Employees.Contains(employee)) return;
             var modifiedEmp = Get(employee.Id);
             modifiedEmp.Name = employee.Name;
             modifiedEmp.LastName = employee.LastName;
             modifiedEmp.Age = employee.Age;
+            _db.SaveChanges();
         }
         public bool Delete(int id)
         {
             var employee = Get(id);
-            if (employee is null) { return false; }
             _db.Employees.Remove(employee);
-          
+            _db.SaveChanges();
             return true;
         }
 
