@@ -13,7 +13,7 @@ namespace WebStore_MVC.Data
     {
         private readonly WebStoreDB _DB;
         private readonly ILogger<WebStoreDBInitializer> _Logger;
-        public WebStoreDBInitializer(WebStoreDB db, ILogger<WebStoreDBInitializer>logger)
+        public WebStoreDBInitializer(WebStoreDB db, ILogger<WebStoreDBInitializer> logger)
         {
             _DB = db;
             _Logger = logger;
@@ -41,7 +41,7 @@ namespace WebStore_MVC.Data
             }
             catch (Exception e)
             {
-                _Logger.LogInformation(e,"Error attempting to initialize products");
+                _Logger.LogInformation(e, "Error attempting to initialize products");
 
                 throw;
             }
@@ -58,9 +58,9 @@ namespace WebStore_MVC.Data
                 return;
             }
             _Logger.LogInformation("Sections initialization skipped");
-           
-                using (_DB.Database.BeginTransaction())
-                {
+
+            using (_DB.Database.BeginTransaction())
+            {
                 _DB.AddRange(TestData.Sections);
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] ON");
                 _DB.SaveChanges();
@@ -75,7 +75,7 @@ namespace WebStore_MVC.Data
             {
                 _DB.AddRange(TestData.Brands);
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
-                _DB.SaveChanges();                                    
+                _DB.SaveChanges();
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
                 _DB.Database.CommitTransaction();
             }
@@ -87,7 +87,7 @@ namespace WebStore_MVC.Data
             {
                 _DB.AddRange(TestData.Products);
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
-                _DB.SaveChanges();                                    
+                _DB.SaveChanges();
                 _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
                 _DB.Database.CommitTransaction();
             }

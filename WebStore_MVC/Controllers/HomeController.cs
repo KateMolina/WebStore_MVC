@@ -11,12 +11,12 @@ namespace WebStore_MVC.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger; 
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -29,8 +29,8 @@ namespace WebStore_MVC.Controllers
             return View();
         }
 
-       
-        
+
+
         public IActionResult Blog() => View();
 
         public IActionResult BlogSingle() => View();
@@ -40,7 +40,7 @@ namespace WebStore_MVC.Controllers
         public IActionResult Cart() => View();
 
         public IActionResult Checkout() => View();
-        
+
         public IActionResult ContactUs() => View();
 
         public IActionResult Login() => View();
