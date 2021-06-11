@@ -33,15 +33,34 @@ namespace WebStore_MVC.Controllers
                 await signInManager.SignInAsync(user, false);
                 RedirectToAction("Index", "Home");
             }
-            foreach(var error in createUser.Errors)
+            foreach (var error in createUser.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
             return View(Model);
         }
-        public IActionResult Login() => View();
-        public IActionResult Logout() => View(RedirectToAction("Index", "Home"));
+        public IActionResult Login(string returnUrl) => View(new LoginViewModel() { ReturnUrl = returnUrl });
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var signInResult = await signInManager.PasswordSignInAsync(
+                model.UserName,
+                model.Password,
+                model.RememberMe,
+#if DEBUG
+                false
+#else
+                true
+#endif
+                );
+            if (signInResult.Succeeded) return LocalRedirect(model.ReturnUrl);
+            ModelState.AddModelError("", "User name or password is incorrect");
+            return View(model);
+        }
         public IActionResult AccessDenied() => View();
+        public IActionResult Logout() => View(RedirectToAction("Index", "Home"));
 
 
 
