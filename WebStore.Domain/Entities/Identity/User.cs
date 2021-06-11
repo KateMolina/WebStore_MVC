@@ -9,14 +9,14 @@ namespace WebStore.Domain.Entities.Identity
 {
     public class User:IdentityUser
     {
-        public const string UserName = "Admin";
-        public const string Password = "Admin";
+        public const string userName = "Admin";
+        public const string password = "Admin";
 
     }
 
     public class Role : IdentityRole
     {
-        public const string Administrators="Administrators";
-        public const string Users="Users";
+        public const string administrators="Administrators";
+        public const string users="Users";
     }
 }
