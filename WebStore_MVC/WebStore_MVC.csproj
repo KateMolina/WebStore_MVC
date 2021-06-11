@@ -39,7 +39,6 @@
     <Folder Include="Infrastructure\Conventions\" />
     <Folder Include="Views\Employees\" />
     <Folder Include="Services\Interfaces\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Components\" />
     <Folder Include="Views\Shared\Components\" />
     <Folder Include="Views\Shared\Components\Sections\" />
