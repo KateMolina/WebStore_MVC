@@ -64,9 +64,11 @@ namespace WebStore_MVC
                 opt.Cookie.Name = "WebStore.GB";
                 opt.Cookie.HttpOnly = true;
                 opt.ExpireTimeSpan = TimeSpan.FromDays(10);
-                opt.Cookie.Path = "/Account/Login";
-                opt.Cookie.Path = "/Account/AccessDenied";
-                opt.Cookie.Path = "/Account/Logout";
+
+                opt.LoginPath = "/Account/Login";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+                opt.LogoutPath = "/Account/Logout";
+
                 opt.SlidingExpiration = true;
             });
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,21 @@ namespace WebStore_MVC.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly ILogger<AccountController> logger;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger)        
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.logger = logger;
         }
         public IActionResult Register() => View(new RegisterViewModel());
+
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel Model)
         {
             if (!ModelState.IsValid) return View(Model);
+            logger.LogInformation("Registering new user {0}", Model.UserName);
             var user = new User
             {
                 UserName = Model.UserName
@@ -31,11 +37,13 @@ namespace WebStore_MVC.Controllers
             if (createUser.Succeeded)
             {
                 await signInManager.SignInAsync(user, false);
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+                logger.LogInformation("New user is successfully registered {0}", Model.UserName);
             }
             foreach (var error in createUser.Errors)
             {
                 ModelState.AddModelError("", error.Description);
+                logger.LogWarning("Error occured during registration of user {0} in the system {1}", Model.UserName, string.Join(",", createUser.Errors.Select(e => e.Description)));
             }
             return View(Model);
         }
@@ -55,12 +63,16 @@ namespace WebStore_MVC.Controllers
                 true
 #endif
                 );
-            if (signInResult.Succeeded) return LocalRedirect(model.ReturnUrl);
+            if (signInResult.Succeeded) return LocalRedirect(model.ReturnUrl??"/");
             ModelState.AddModelError("", "User name or password is incorrect");
             return View(model);
         }
+        public async Task<IActionResult> Logout()
+        {
+          await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
         public IActionResult AccessDenied() => View();
-        public IActionResult Logout() => View(RedirectToAction("Index", "Home"));
 
 
 

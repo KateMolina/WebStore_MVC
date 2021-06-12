@@ -52,43 +52,35 @@ namespace WebStore_MVC.Data
         public void InitializeProducts()
         {
             var timer = Stopwatch.StartNew();
-            if (_DB.Products.Any())
-            {
-                _Logger.LogInformation("The DB doesn't need to initialize products");
-                return;
-            }
-            _Logger.LogInformation("Sections initialization skipped");
 
-            using (_DB.Database.BeginTransaction())
-            {
-                _DB.AddRange(TestData.Sections);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] ON");
-                _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] OFF");
-                _DB.Database.CommitTransaction();
-            }
-            _Logger.LogInformation("Sections initialization Completed for {}", timer.Elapsed.TotalSeconds);
+            var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
+            var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
 
-            _Logger.LogInformation("Brands initialization skipped");
+            foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
+                section.Parent = sections_pool[(int)section.ParentId!];
 
-            using (_DB.Database.BeginTransaction())
+            foreach (var product in TestData.Products)
             {
-                _DB.AddRange(TestData.Brands);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
-                _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
-                _DB.Database.CommitTransaction();
+                product.Section = sections_pool[product.SectionId];
+                if (product.BrandId is { } brand_id)
+                {
+                    product.Brand = brands_pool[brand_id];
+                }
+                product.Id = 0;
+                product.SectionId = 0;
+                product.BrandId = null; 
             }
-            _Logger.LogInformation("Brands initialization Completed for {}", timer.Elapsed.TotalSeconds);
+            foreach(var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
+            foreach(var b in TestData.Brands) { b.Id = 0; }
 
             _Logger.LogInformation("Products initialization skipped");
 
             using (_DB.Database.BeginTransaction())
             {
+                _DB.Sections.AddRange(TestData.Sections);
+                _DB.Brands.AddRange(TestData.Brands);
                 _DB.AddRange(TestData.Products);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
                 _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
                 _DB.Database.CommitTransaction();
             }
             _Logger.LogInformation("Products initialization Completed for {}", timer.Elapsed.TotalSeconds);
@@ -96,16 +88,12 @@ namespace WebStore_MVC.Data
         }
         public void InitializeEmployees()
         {
-            if (_DB.Employees.Any())
-            {
-                return;
-            }
+           foreach(var emp in TestData.Employees) { emp.Id = 0; }
+
             using (_DB.Database.BeginTransaction())
             {
-                _DB.AddRange(TestData.Employees);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] ON");
+                _DB.Employees.AddRange(TestData.Employees);
                 _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] OFF");
                 _DB.Database.CommitTransaction();
 
             }
