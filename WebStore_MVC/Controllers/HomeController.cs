@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebStore_MVC.Models;
+using WebStore_MVC.Services.Interfaces;
+using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
@@ -19,8 +21,16 @@ namespace WebStore_MVC.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index([FromServices]IProductData _ProductData)
         {
+            var products = _ProductData.GetProducts().Take(9).Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+            });
+            ViewBag.Products = products;
             return View();
         }
 
