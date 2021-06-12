@@ -37,7 +37,6 @@ namespace WebStore_MVC.Data
             try
             {
                 InitializeProducts();
-                InitializeEmployees();
             }
             catch (Exception e)
             {
@@ -45,57 +44,84 @@ namespace WebStore_MVC.Data
 
                 throw;
             }
-            _Logger.LogInformation("DB Initialization has completed fot the total of {}", timer.Elapsed.TotalSeconds);
+            try
+            {
+                InitializeEmployees();
+
+            }
+            catch (Exception e)
+            {
+                _Logger.LogError(e, "Error attempting to initialize employees");
+                throw;
+            }
+            _Logger.LogInformation("DB has been initialized for the total of {0}", timer.Elapsed.TotalSeconds);
 
         }
 
         public void InitializeProducts()
         {
-            var timer = Stopwatch.StartNew();
-
-            var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
-            var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
-
-            foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
-                section.Parent = sections_pool[(int)section.ParentId!];
-
-            foreach (var product in TestData.Products)
+            if (_DB.Products.Any())
             {
-                product.Section = sections_pool[product.SectionId];
-                if (product.BrandId is { } brand_id)
+                _Logger.LogInformation("Products initialization skipped");
+                return;
+            }
+            else
+            {
+                var timer = Stopwatch.StartNew();
+                var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
+                var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
+
+                foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
+                    section.Parent = sections_pool[(int)section.ParentId!];
+
+                foreach (var product in TestData.Products)
                 {
-                    product.Brand = brands_pool[brand_id];
+                    product.Section = sections_pool[product.SectionId];
+                    if (product.BrandId is { } brand_id)
+                    {
+                        product.Brand = brands_pool[brand_id];
+                    }
+                    product.Id = 0;
+                    product.SectionId = 0;
+                    product.BrandId = null;
                 }
-                product.Id = 0;
-                product.SectionId = 0;
-                product.BrandId = null; 
-            }
-            foreach(var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
-            foreach(var b in TestData.Brands) { b.Id = 0; }
+                foreach (var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
+                foreach (var b in TestData.Brands) { b.Id = 0; }
 
-            _Logger.LogInformation("Products initialization skipped");
 
-            using (_DB.Database.BeginTransaction())
-            {
-                _DB.Sections.AddRange(TestData.Sections);
-                _DB.Brands.AddRange(TestData.Brands);
-                _DB.AddRange(TestData.Products);
-                _DB.SaveChanges();
-                _DB.Database.CommitTransaction();
+
+                using (_DB.Database.BeginTransaction())
+                {
+                    _DB.Sections.AddRange(TestData.Sections);
+                    _DB.Brands.AddRange(TestData.Brands);
+                    _DB.AddRange(TestData.Products);
+                    _DB.SaveChanges();
+                    _DB.Database.CommitTransaction();
+                }
+                _Logger.LogInformation("Products initialization Completed for {0}", timer.Elapsed.TotalSeconds);
             }
-            _Logger.LogInformation("Products initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
         }
         public void InitializeEmployees()
         {
-           foreach(var emp in TestData.Employees) { emp.Id = 0; }
-
-            using (_DB.Database.BeginTransaction())
+            if (_DB.Employees.Any())
             {
-                _DB.Employees.AddRange(TestData.Employees);
-                _DB.SaveChanges();
-                _DB.Database.CommitTransaction();
+                _Logger.LogInformation("Employees initialization skipped");
+                return;
+            }
+            else
+            {
+                var timer1 = Stopwatch.StartNew();
+                foreach (var emp in TestData.Employees) { emp.Id = 0; }
 
+                using (_DB.Database.BeginTransaction())
+                {
+                    _DB.Employees.AddRange(TestData.Employees);
+                    _DB.SaveChanges();
+                    _DB.Database.CommitTransaction();
+
+                }
+                _Logger.LogInformation("Employees initialization completed for the total of {0}", timer1.Elapsed.TotalSeconds);
             }
         }
 
