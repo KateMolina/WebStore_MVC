@@ -37,8 +37,8 @@ namespace WebStore_MVC.Controllers
             if (createUser.Succeeded)
             {
                 await signInManager.SignInAsync(user, false);
-                return RedirectToAction("Index", "Home");
                 logger.LogInformation("New user is successfully registered {0}", Model.UserName);
+                return RedirectToAction("Index", "Home");
             }
             foreach (var error in createUser.Errors)
             {
