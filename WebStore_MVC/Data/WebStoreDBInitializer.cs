@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.DAL.Context;
+using WebStore.Domain.Entities.Identity;
 
 namespace WebStore_MVC.Data
 {
@@ -13,10 +15,20 @@ namespace WebStore_MVC.Data
     {
         private readonly WebStoreDB _DB;
         private readonly ILogger<WebStoreDBInitializer> _Logger;
-        public WebStoreDBInitializer(WebStoreDB db, ILogger<WebStoreDBInitializer> logger)
+        private readonly UserManager<User> userManager;
+        private readonly RoleManager<Role> roleManager;
+
+        public WebStoreDBInitializer(
+            WebStoreDB db,
+            ILogger<WebStoreDBInitializer> logger,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager
+            )
         {
             _DB = db;
             _Logger = logger;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
         public void Initialize()
         {
@@ -46,6 +58,16 @@ namespace WebStore_MVC.Data
             }
             try
             {
+                InitializeIdentityAsync().GetAwaiter().GetResult();
+
+            }
+            catch (Exception e)
+            {
+                _Logger.LogError(e, "Error attempting to initialize Identities");
+                throw;
+            }
+            try
+            {
                 InitializeEmployees();
 
             }
@@ -58,7 +80,7 @@ namespace WebStore_MVC.Data
 
         }
 
-        public void InitializeProducts()
+        private void InitializeProducts()
         {
             if (_DB.Products.Any())
             {
@@ -102,7 +124,52 @@ namespace WebStore_MVC.Data
             }
 
         }
-        public void InitializeEmployees()
+
+        public async Task InitializeIdentityAsync()
+        {
+            _Logger.LogInformation("Identity initialization started...");
+            var timer = Stopwatch.StartNew();
+
+            async Task CheckRole(string roleName)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    _Logger.LogInformation("Role {0} does not exist. Creating...", roleName);
+                    await roleManager.CreateAsync(new Role { Name = roleName });
+                    _Logger.LogInformation("New role {0} has been created", roleName);
+                }
+            }
+            await CheckRole(Role.administrators);
+            await CheckRole(Role.users);
+
+            if (await userManager.FindByNameAsync(User.Administrator) is null)
+            {
+                _Logger.LogInformation("User {0} does not exist. Creating...", User.Administrator);
+
+                var admin = new User
+                {
+                    UserName = User.Administrator
+                };
+
+                var creationResult = await userManager.CreateAsync(admin, User.DefaultAdminPassword);
+                if (creationResult.Succeeded)
+                {
+                _Logger.LogInformation("User {0} has been created", User.Administrator);
+                    await userManager.AddToRoleAsync(admin, Role.administrators);
+                    _Logger.LogInformation("User {0} has been assigned a role {1}", User.Administrator, Role.administrators);
+                }
+                else
+                {
+                    var errors = creationResult.Errors.Select(e => e.Description).ToArray();
+                    _Logger.LogError("Admin user could not be created bacause of ", string.Join(",", errors));
+
+                    throw new InvalidOperationException($"Error attempting to create user {User.Administrator} because of {string.Join(",", errors)}");
+                }
+            }
+            _Logger.LogInformation($"Identity initialization has completed for {timer.Elapsed.TotalSeconds}");
+        }
+
+        private void InitializeEmployees()
         {
             if (_DB.Employees.Any())
             {
