@@ -18,14 +18,14 @@ namespace WebStore_MVC.Services.InSql
         }
 
         public IEnumerable<Brand> GetBrands() => _db.Brands;
-        
+
         public IEnumerable<Section> GetSections() => _db.Sections;
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
             IQueryable<Product> query = _db.Products;
 
-            if(filter?.SectionId is { } section_id)
+            if (filter?.SectionId is { } section_id)
             {
                 query = query.Where(p => p.SectionId == section_id);
             }
@@ -37,6 +37,6 @@ namespace WebStore_MVC.Services.InSql
             return query;
         }
 
-        
+
     }
 }

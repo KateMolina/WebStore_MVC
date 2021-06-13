@@ -11,7 +11,7 @@ using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
-   // [Route("Staff")]
+    // [Route("Staff")]
     public class EmployeesController : Controller
     {
         private readonly IEmployeesData _EmployeesData;
@@ -26,7 +26,7 @@ namespace WebStore_MVC.Controllers
         //[Route("all")]
         public IActionResult Index() => View(_EmployeesData.GetAll());
 
-       // [Route("info-id-{id}")]
+        // [Route("info-id-{id}")]
         public IActionResult Details(int id)
         {
             var employee = _EmployeesData.Get(id);
@@ -50,7 +50,7 @@ namespace WebStore_MVC.Controllers
                 FirstName = employee.Name,
                 LastName = employee.LastName,
                 Age = employee.Age,
-        };
+            };
 
             return View(viewModel);
         }
@@ -68,7 +68,7 @@ namespace WebStore_MVC.Controllers
                 Id = Model.Id,
                 Name = Model.FirstName,
                 LastName = Model.LastName,
-                Age=Model.Age,
+                Age = Model.Age,
             };
             if (employee.Id == 0) _EmployeesData.Add(employee);
             else _EmployeesData.Update(employee);
@@ -88,10 +88,10 @@ namespace WebStore_MVC.Controllers
 
             return View(new EmployeeViewModel()
             {
-            Id=employee.Id,
-            FirstName = employee.Name,
-            LastName=employee.LastName,
-            Age=employee.Age,
+                Id = employee.Id,
+                FirstName = employee.Name,
+                LastName = employee.LastName,
+                Age = employee.Age,
             });
         }
 

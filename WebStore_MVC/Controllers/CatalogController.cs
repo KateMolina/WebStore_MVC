@@ -17,7 +17,7 @@ namespace WebStore_MVC.Controllers
         {
             _ProductData = productData;
         }
-        
+
         public IActionResult Index(int? BrandId, int? SectionId)
         {
             var filter = new ProductFilter
@@ -36,14 +36,14 @@ namespace WebStore_MVC.Controllers
                 .OrderBy(p => p.Order)
                 .Select(p => new ProductViewModel
                 {
-                    Id=p.Id,
-                    Name=p.Name,
-                    Price=p.Price,
-                    ImageUrl=p.ImageUrl,
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl,
                 })
 
 
-            }) ;
+            });
         }
     }
 }

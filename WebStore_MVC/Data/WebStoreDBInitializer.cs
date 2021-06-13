@@ -13,7 +13,7 @@ namespace WebStore_MVC.Data
     {
         private readonly WebStoreDB _DB;
         private readonly ILogger<WebStoreDBInitializer> _Logger;
-        public WebStoreDBInitializer(WebStoreDB db, ILogger<WebStoreDBInitializer>logger)
+        public WebStoreDBInitializer(WebStoreDB db, ILogger<WebStoreDBInitializer> logger)
         {
             _DB = db;
             _Logger = logger;
@@ -37,77 +37,91 @@ namespace WebStore_MVC.Data
             try
             {
                 InitializeProducts();
-                InitializeEmployees();
             }
             catch (Exception e)
             {
-                _Logger.LogInformation(e,"Error attempting to initialize products");
+                _Logger.LogInformation(e, "Error attempting to initialize products");
 
                 throw;
             }
-            _Logger.LogInformation("DB Initialization has completed fot the total of {}", timer.Elapsed.TotalSeconds);
+            try
+            {
+                InitializeEmployees();
+
+            }
+            catch (Exception e)
+            {
+                _Logger.LogError(e, "Error attempting to initialize employees");
+                throw;
+            }
+            _Logger.LogInformation("DB has been initialized for the total of {0}", timer.Elapsed.TotalSeconds);
 
         }
 
         public void InitializeProducts()
         {
-            var timer = Stopwatch.StartNew();
             if (_DB.Products.Any())
             {
-                _Logger.LogInformation("The DB doesn't need to initialize products");
+                _Logger.LogInformation("Products initialization skipped");
                 return;
             }
-            _Logger.LogInformation("Sections initialization skipped");
-           
+            else
+            {
+                var timer = Stopwatch.StartNew();
+                var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
+                var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
+
+                foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
+                    section.Parent = sections_pool[(int)section.ParentId!];
+
+                foreach (var product in TestData.Products)
+                {
+                    product.Section = sections_pool[product.SectionId];
+                    if (product.BrandId is { } brand_id)
+                    {
+                        product.Brand = brands_pool[brand_id];
+                    }
+                    product.Id = 0;
+                    product.SectionId = 0;
+                    product.BrandId = null;
+                }
+                foreach (var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
+                foreach (var b in TestData.Brands) { b.Id = 0; }
+
+
+
                 using (_DB.Database.BeginTransaction())
                 {
-                _DB.AddRange(TestData.Sections);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] ON");
-                _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] OFF");
-                _DB.Database.CommitTransaction();
+                    _DB.Sections.AddRange(TestData.Sections);
+                    _DB.Brands.AddRange(TestData.Brands);
+                    _DB.AddRange(TestData.Products);
+                    _DB.SaveChanges();
+                    _DB.Database.CommitTransaction();
+                }
+                _Logger.LogInformation("Products initialization Completed for {0}", timer.Elapsed.TotalSeconds);
             }
-            _Logger.LogInformation("Sections initialization Completed for {}", timer.Elapsed.TotalSeconds);
-
-            _Logger.LogInformation("Brands initialization skipped");
-
-            using (_DB.Database.BeginTransaction())
-            {
-                _DB.AddRange(TestData.Brands);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
-                _DB.SaveChanges();                                    
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
-                _DB.Database.CommitTransaction();
-            }
-            _Logger.LogInformation("Brands initialization Completed for {}", timer.Elapsed.TotalSeconds);
-
-            _Logger.LogInformation("Products initialization skipped");
-
-            using (_DB.Database.BeginTransaction())
-            {
-                _DB.AddRange(TestData.Products);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
-                _DB.SaveChanges();                                    
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
-                _DB.Database.CommitTransaction();
-            }
-            _Logger.LogInformation("Products initialization Completed for {}", timer.Elapsed.TotalSeconds);
 
         }
         public void InitializeEmployees()
         {
             if (_DB.Employees.Any())
             {
+                _Logger.LogInformation("Employees initialization skipped");
                 return;
             }
-            using (_DB.Database.BeginTransaction())
+            else
             {
-                _DB.AddRange(TestData.Employees);
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] ON");
-                _DB.SaveChanges();
-                _DB.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Employees] OFF");
-                _DB.Database.CommitTransaction();
+                var timer1 = Stopwatch.StartNew();
+                foreach (var emp in TestData.Employees) { emp.Id = 0; }
 
+                using (_DB.Database.BeginTransaction())
+                {
+                    _DB.Employees.AddRange(TestData.Employees);
+                    _DB.SaveChanges();
+                    _DB.Database.CommitTransaction();
+
+                }
+                _Logger.LogInformation("Employees initialization completed for the total of {0}", timer1.Elapsed.TotalSeconds);
             }
         }
 
