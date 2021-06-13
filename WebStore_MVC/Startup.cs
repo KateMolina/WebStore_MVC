@@ -8,12 +8,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.DAL.Context;
+using WebStore_MVC.Data;
 using WebStore_MVC.Infrastructure;
 using WebStore_MVC.Infrastructure.Conventions;
 using WebStore_MVC.Services;
+using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC
@@ -27,22 +31,27 @@ namespace WebStore_MVC
 
         public IConfiguration Configuration { get; }
 
-      
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            services.AddSingleton<IProductData, InMemoryProductData>();
 
-            //services.AddScoped<ITestService, TestService>();
-            //services.AddScoped<IPrinter, DebuPrinter>();
-            services.AddControllersWithViews(opt=>opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("MSSQL")));
+            services.AddTransient<WebStoreDBInitializer>();
+            services.AddScoped<IProductData, SqlProductData>();
+            services.AddScoped<IEmployeesData, SqlEmployeesData>();
+            //services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+            //services.AddSingleton<IProductData, InMemoryProductData>();
         }
 
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            //var testServ = serviceProvider.GetRequiredService<ITestService>();
-            //testServ.Test();
+            using (var scope = serviceProvider.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
+            }
+
 
             if (env.IsDevelopment())
             {
@@ -87,41 +96,4 @@ namespace WebStore_MVC
 
         }
     }
-
-    //interface ITestService
-    //{
-    //    void Test();
-    //}
-
-    //class TestService : ITestService
-    //{
-    //    private IPrinter _Printer;
-
-    //    public TestService(IPrinter printer)
-    //    {
-    //        _Printer = printer;
-    //    }
-
-    //    public void Test()
-    //    {
-    //        _Printer.Print("TestServiceStarted");
-    //    }
-    //}
-
-    //interface IPrinter
-    //{
-    //    void Print(string str);
-    //}
-
-    //class DebuPrinter : IPrinter
-    //{
-    //    public DebuPrinter()
-    //    {
-
-    //    }
-    //    public void Print(string str)
-    //    {
-    //        Debug.WriteLine(str);
-    //    }
-    //}
 }

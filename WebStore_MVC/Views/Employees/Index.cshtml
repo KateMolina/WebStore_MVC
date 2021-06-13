@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebStore_MVC.Models.Employee>
+﻿@model IEnumerable<WebStore.Domain.Entities.Employee>
 @{
     ViewData["Title"] = "Employees";
 }
@@ -33,7 +33,7 @@
         {
         <tr>
             <td>@employee.Id</td>
-            <td>@employee.FirstName</td>
+            <td>@employee.Name</td>
             <td>@employee.LastName</td>
             <td>@employee.Age</td>
             <td>
