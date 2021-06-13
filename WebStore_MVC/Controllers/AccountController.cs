@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,6 +11,7 @@ using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -22,8 +24,10 @@ namespace WebStore_MVC.Controllers
             this.signInManager = signInManager;
             this.logger = logger;
         }
+        [AllowAnonymous]
         public IActionResult Register() => View(new RegisterViewModel());
 
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel Model)
         {
@@ -47,8 +51,12 @@ namespace WebStore_MVC.Controllers
             }
             return View(Model);
         }
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl) => View(new LoginViewModel() { ReturnUrl = returnUrl });
+        
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -63,8 +71,12 @@ namespace WebStore_MVC.Controllers
                 true
 #endif
                 );
-            if (signInResult.Succeeded) return LocalRedirect(model.ReturnUrl??"/");
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(model.ReturnUrl ?? "/");
+            }
             ModelState.AddModelError("", "User name or password is incorrect");
+
             return View(model);
         }
         public async Task<IActionResult> Logout()

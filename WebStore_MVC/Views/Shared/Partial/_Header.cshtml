@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="logo pull-left">
-                        <a asp-controller="Home"asp-action="Index"><img src="~/images/home/logo.png" alt="" /></a>
+                        <a asp-controller="Home" asp-action="Index"><img src="~/images/home/logo.png" alt="" /></a>
                     </div>
                     <div class="btn-group pull-right">
                         <div class="btn-group">
@@ -60,15 +60,7 @@
                     </div>
                 </div>
                 <div class="col-sm-8">
-                    <div class="shop-menu pull-right">
-                        <ul class="nav navbar-nav">
-                            <li><a href="#"><i class="fa fa-user"></i> @(User.Identity?.Name??"???")</a></li>
-                            <li><a asp-controller="Home" asp-action="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                            <li><a asp-controller="Account" asp-action="Login"><i class="fa fa-lock"></i> Sign In</a></li>
-                            <li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-lock"></i> Sign Out</a></li>
-                            <li><a asp-controller="Account" asp-action="Register"><i class="fa fa-lock"></i> Sign Up</a></li>
-                        </ul>
-                    </div>
+                    @await Component.InvokeAsync("UserInfo");
                 </div>
             </div>
         </div>

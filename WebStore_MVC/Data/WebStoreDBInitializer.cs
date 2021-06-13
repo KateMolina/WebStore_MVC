@@ -125,7 +125,7 @@ namespace WebStore_MVC.Data
 
         }
 
-        public async Task InitializeIdentityAsync()
+        private async Task InitializeIdentityAsync()
         {
             _Logger.LogInformation("Identity initialization started...");
             var timer = Stopwatch.StartNew();

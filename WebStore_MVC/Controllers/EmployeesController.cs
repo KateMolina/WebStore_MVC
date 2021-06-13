@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebStore.Domain.Entities;
+using WebStore.Domain.Entities.Identity;
 using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
@@ -35,9 +37,10 @@ namespace WebStore_MVC.Controllers
             return View(employee);
         }
 
+        [Authorize(Roles =Role.administrators)]
         public IActionResult Create(int id) => View("Edit", new EmployeeViewModel());
 
-
+        [Authorize(Roles = Role.administrators)]
         public IActionResult Edit(int? id)
         {
             if (id is null) return View(new EmployeeViewModel());
@@ -57,11 +60,12 @@ namespace WebStore_MVC.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = Role.administrators)]
         public IActionResult Edit(EmployeeViewModel Model)
         {
             if (!ModelState.IsValid) return View(Model);
 
-            _logger.LogInformation("Updating details of the employee by id {}", Model.Id);
+            _logger.LogInformation("Updating details of the employee - id: {0}", Model.Id);
 
             var employee = new Employee()
             {
@@ -73,12 +77,13 @@ namespace WebStore_MVC.Controllers
             if (employee.Id == 0) _EmployeesData.Add(employee);
             else _EmployeesData.Update(employee);
 
-            _logger.LogInformation("Updating details of the employee by id {} completed", Model.Id);
+            _logger.LogInformation("Updating details of the employee - id {0} completed", Model.Id);
 
             return RedirectToAction("Index");
         }
 
 
+        [Authorize(Roles = Role.administrators)]
         public IActionResult Delete(int id)
         {
             if (id <= 0) return BadRequest();
@@ -96,11 +101,12 @@ namespace WebStore_MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles =Role.administrators)]
         public IActionResult DeleteConfirmed(int id)
         {
-            _logger.LogInformation("Deletion of the employee by id {}", id);
+            _logger.LogInformation("Deletion of the employee - id {0}", id);
             _EmployeesData.Delete(id);
-            _logger.LogInformation("Deletion of the employee by id {} has been completed", id);
+            _logger.LogInformation("Deletion of the employee - id {0} has been completed", id);
             return RedirectToAction("Index");
         }
 

@@ -1,3 +1,4 @@
+@using WebStore.Domain.Entities.Identity
 @model WebStore.Domain.Entities.Employee  
 @{
     ViewData["Title"] = $"{Model.Name}'s Info";
@@ -40,7 +41,10 @@
     <div>
         @*Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
         <a asp-action="Index">Back to List </a>|
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit </a>|
+        @if (User.IsInRole(Role.administrators))
+        {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit </a>
         <a asp-action="Delete" asp-route-id="@Model.Id">Delete </a>
+        }
     </div>
 </div>

@@ -28,7 +28,7 @@ namespace WebStore_MVC.Services
             if (TestData.Employees.Contains(employee)) return employee.Id;
             employee.Id = ++_CurrentMaxId;
             TestData.Employees.Add(employee);
-            _logger.LogInformation("Employee {} has been added", employee.Id);
+            _logger.LogInformation("Employee {0} has been added", employee.Id);
             return employee.Id;
         }
 
@@ -44,7 +44,7 @@ namespace WebStore_MVC.Services
             dbItem.LastName = employee.LastName;
             dbItem.Name = employee.Name;
             dbItem.Age = employee.Age;
-            _logger.LogInformation("Employee {} has been updated", employee.Id);
+            _logger.LogInformation("Employee {0} has been updated", employee.Id);
 
         }
 
@@ -53,17 +53,17 @@ namespace WebStore_MVC.Services
             var dbItem = Get(id);
             if (dbItem is null) 
             {
-                _logger.LogWarning("Deleting employee {} - id not found", id);
+                _logger.LogWarning("Deleting employee {0} - id not found", id);
                 return false; 
             }
             var result = TestData.Employees.Remove(dbItem);
             if (result)
             {
-                _logger.LogInformation("Employee {} has been removed", id);
+                _logger.LogInformation("Employee {0} has been removed", id);
             }
             else
             {
-                _logger.LogError("Problems while deleting employee {} - id not found", id);
+                _logger.LogError("Problems while deleting employee {0} - id not found", id);
             }
             return result;
 
