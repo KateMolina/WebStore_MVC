@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.DAL.Context;
@@ -23,7 +24,9 @@ namespace WebStore_MVC.Services.InSql
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
-            IQueryable<Product> query = _db.Products;
+            IQueryable<Product> query = _db.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Section);
 
             if (filter?.SectionId is { } section_id)
             {
@@ -37,6 +40,10 @@ namespace WebStore_MVC.Services.InSql
             return query;
         }
 
-
+        public Product GetProductById(int id)
+        {
+           Product product = _db.Products.SingleOrDefault(p => p.Id == id);
+            return product;
+        }
     }
 }

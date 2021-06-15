@@ -28,8 +28,8 @@ namespace WebStore_MVC.Services
             return query;
         }
 
+        public Product GetProductById(int id) => TestData.Products.SingleOrDefault(p => p.Id ==id);
         
-
         
     }
 }

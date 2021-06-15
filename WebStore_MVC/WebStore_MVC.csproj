@@ -30,7 +30,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.7" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Shared\Partial\" />
     <Folder Include="Views\Home\Partial\" />
     <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />
@@ -38,7 +37,6 @@
     <Folder Include="Services\Interfaces\" />
     <Folder Include="Views\Shared\Components\Sections\" />
     <Folder Include="Views\Shared\Components\Brands\" />
-    <Folder Include="Views\Catalog\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Data\" />
