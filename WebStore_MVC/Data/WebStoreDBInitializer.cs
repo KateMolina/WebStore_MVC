@@ -116,7 +116,7 @@ namespace WebStore_MVC.Data
                 {
                     _DB.Sections.AddRange(TestData.Sections);
                     _DB.Brands.AddRange(TestData.Brands);
-                    _DB.AddRange(TestData.Products);
+                    _DB.Products.AddRange(TestData.Products);
                     _DB.SaveChanges();
                     _DB.Database.CommitTransaction();
                 }

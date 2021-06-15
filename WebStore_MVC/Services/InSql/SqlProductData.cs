@@ -42,7 +42,10 @@ namespace WebStore_MVC.Services.InSql
 
         public Product GetProductById(int id)
         {
-           Product product = _db.Products.SingleOrDefault(p => p.Id == id);
+            Product product = _db.Products
+                 .Include(p => p.Brand)
+                 .Include(p => p.Section)
+                 .SingleOrDefault(p => p.Id == id);
             return product;
         }
     }
