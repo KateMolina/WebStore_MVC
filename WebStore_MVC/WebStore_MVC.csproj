@@ -32,7 +32,6 @@
   <ItemGroup>
     <Folder Include="Views\Shared\Partial\" />
     <Folder Include="Views\Home\Partial\" />
-    <Folder Include="Infrastructure\" />
     <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />
     <Folder Include="Views\Employees\" />

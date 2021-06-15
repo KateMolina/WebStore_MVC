@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain;
+using WebStore_MVC.Infrastructure.Mapping;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
 
@@ -34,16 +35,8 @@ namespace WebStore_MVC.Controllers
                 SectionId = SectionId,
                 Products = products
                 .OrderBy(p => p.Order)
-                .Select(p => new ProductViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Price = p.Price,
-                    ImageUrl = p.ImageUrl,
-                })
-
-
-            });
+                .ToView()
+            }); ;
         }
     }
 }
