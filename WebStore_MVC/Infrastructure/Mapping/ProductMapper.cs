@@ -19,7 +19,7 @@ namespace WebStore_MVC.Infrastructure.Mapping
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
                 Brand = product.Brand?.Name,
-                Section = product.Section.Name
+                Section = product.Section?.Name
             };
 
         public static IEnumerable<ProductViewModel> ToView(this IEnumerable<Product> products) => products.Select(ToView);

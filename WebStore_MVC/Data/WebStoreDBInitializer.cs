@@ -87,41 +87,40 @@ namespace WebStore_MVC.Data
                 _Logger.LogInformation("Products initialization skipped");
                 return;
             }
-            else
+
+            var timer = Stopwatch.StartNew();
+            var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
+            var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
+
+            foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
+                section.Parent = sections_pool[(int)section.ParentId!];
+
+            foreach (var product in TestData.Products)
             {
-                var timer = Stopwatch.StartNew();
-                var sections_pool = TestData.Sections.ToDictionary(section => section.Id);
-                var brands_pool = TestData.Brands.ToDictionary(brand => brand.Id);
+                product.Section = sections_pool[product.SectionId];
+                if (product.BrandId is { } brand_id)
+                    product.Brand = brands_pool[brand_id];
 
-                foreach (var section in TestData.Sections.Where(s => s.ParentId != null))
-                    section.Parent = sections_pool[(int)section.ParentId!];
+                product.Id = 0;
+                product.SectionId = 0;
+                product.BrandId = null;
 
-                foreach (var product in TestData.Products)
-                {
-                    product.Section = sections_pool[product.SectionId];
-                    if (product.BrandId is { } brand_id)
-                    {
-                        product.Brand = brands_pool[brand_id];
-                    }
-                    product.Id = 0;
-                    product.SectionId = 0;
-                    product.BrandId = null;
-                }
-                foreach (var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
-                foreach (var b in TestData.Brands) { b.Id = 0; }
-
-
-
-                using (_DB.Database.BeginTransaction())
-                {
-                    _DB.Sections.AddRange(TestData.Sections);
-                    _DB.Brands.AddRange(TestData.Brands);
-                    _DB.Products.AddRange(TestData.Products);
-                    _DB.SaveChanges();
-                    _DB.Database.CommitTransaction();
-                }
-                _Logger.LogInformation("Products initialization Completed for {0}", timer.Elapsed.TotalSeconds);
             }
+            foreach (var s in TestData.Sections) { s.Id = 0; s.ParentId = null; }
+            foreach (var b in TestData.Brands) { b.Id = 0; }
+
+
+
+            using (_DB.Database.BeginTransaction())
+            {
+                _DB.Sections.AddRange(TestData.Sections);
+                _DB.Brands.AddRange(TestData.Brands);
+                _DB.Products.AddRange(TestData.Products);
+                _DB.SaveChanges();
+                _DB.Database.CommitTransaction();
+            }
+            _Logger.LogInformation("Products initialization Completed for {0}", timer.Elapsed.TotalSeconds);
+
 
         }
 
@@ -154,7 +153,7 @@ namespace WebStore_MVC.Data
                 var creationResult = await userManager.CreateAsync(admin, User.DefaultAdminPassword);
                 if (creationResult.Succeeded)
                 {
-                _Logger.LogInformation("User {0} has been created", User.Administrator);
+                    _Logger.LogInformation("User {0} has been created", User.Administrator);
                     await userManager.AddToRoleAsync(admin, Role.administrators);
                     _Logger.LogInformation("User {0} has been assigned a role {1}", User.Administrator, Role.administrators);
                 }
