@@ -19,6 +19,7 @@ using WebStore_MVC.Data;
 using WebStore_MVC.Infrastructure;
 using WebStore_MVC.Infrastructure.Conventions;
 using WebStore_MVC.Services;
+using WebStore_MVC.Services.InCookies;
 using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 
@@ -42,6 +43,7 @@ namespace WebStore_MVC
             services.AddTransient<WebStoreDBInitializer>();
             services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<IEmployeesData, SqlEmployeesData>();
+            services.AddScoped<ICartService, InCookiesCartService>();
             services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreDB>().AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(opt =>
             {
