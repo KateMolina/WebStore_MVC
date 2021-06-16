@@ -7,6 +7,8 @@ using WebStore.Domain.Entities;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
 using Newtonsoft.Json;
+using WebStore.Domain;
+using WebStore_MVC.Infrastructure.Mapping;
 
 namespace WebStore_MVC.Services.InCookies
 {
@@ -35,7 +37,7 @@ namespace WebStore_MVC.Services.InCookies
                 var cookies = context.Response.Cookies;
                 var cart_cookie = context.Request.Cookies[cartName];
 
-                if(cart_cookie is null)
+                if (cart_cookie is null)
                 {
                     var cart = new Cart();
                     cookies.Append(cart_cookie, JsonConvert.SerializeObject(cart));
@@ -64,7 +66,7 @@ namespace WebStore_MVC.Services.InCookies
         {
             var cart = Cart;
             var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
-            if(item is null) { cart.cartItems.Add(new CartItem { ProductId = id }); }
+            if (item is null) { cart.cartItems.Add(new CartItem { ProductId = id }); }
             else { item.Quantity++; }
             Cart = cart;
         }
@@ -73,13 +75,13 @@ namespace WebStore_MVC.Services.InCookies
         {
             var cart = Cart;
             var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
-            if(item is null) 
+            if (item is null)
             { return; }
 
-            if (item.Quantity > 0) 
+            if (item.Quantity > 0)
             { item.Quantity--; }
 
-            if (item.Quantity <= 0) 
+            if (item.Quantity <= 0)
             { cart.cartItems.Remove(item); }
 
             Cart = cart;
@@ -105,12 +107,20 @@ namespace WebStore_MVC.Services.InCookies
 
         public CartViewModel GetCartViewModel()
         {
-            throw new NotImplementedException();
-        }
+            var products = productData.GetProducts(new ProductFilter
+            {
+                Ids = Cart.cartItems.Select(i => i.ProductId).ToArray()
+            });
 
-        public void Remove(int id)
-        {
-            throw new NotImplementedException();
+            var products_views = products.ToView().ToDictionary(p => p.Id);
+
+            return new CartViewModel
+            {
+                Items = Cart.cartItems
+                .Where(item => products_views.ContainsKey(item.ProductId))
+                .Select(item => (products_views[item.ProductId], item.Quantity))
+            };
         }
     }
 }
+
