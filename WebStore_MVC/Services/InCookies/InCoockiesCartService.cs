@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,33 +15,22 @@ namespace WebStore_MVC.Services.InCookies
 {
     public class InCookiesCartService : ICartService
     {
-        private readonly HttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IProductData productData;
         private readonly string cartName;
-
-        public InCookiesCartService(HttpContextAccessor httpContextAccessor, IProductData productData)
-        {
-            this.httpContextAccessor = httpContextAccessor;
-            this.productData = productData;
-
-            var user = httpContextAccessor.HttpContext.User;
-            var user_name = user.Identity.IsAuthenticated ? $"-{user.Identity.Name}" : null;
-
-            cartName = $"WebStore. Cart {user_name}";
-        }
 
         private Cart Cart
         {
             get
             {
                 var context = httpContextAccessor.HttpContext;
-                var cookies = context.Response.Cookies;
+                var cookies = context!.Response.Cookies;
                 var cart_cookie = context.Request.Cookies[cartName];
 
                 if (cart_cookie is null)
                 {
                     var cart = new Cart();
-                    cookies.Append(cart_cookie, JsonConvert.SerializeObject(cart));
+                    cookies.Append(cartName, JsonConvert.SerializeObject(cart));
                     return cart;
                 }
                 ReplaceCookies(cookies, cart_cookie);
@@ -49,7 +39,7 @@ namespace WebStore_MVC.Services.InCookies
 
             set
             {
-                ReplaceCookies(httpContextAccessor.HttpContext.Response.Cookies, JsonConvert.SerializeObject(value));
+                ReplaceCookies(httpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
             }
         }
 
@@ -60,13 +50,24 @@ namespace WebStore_MVC.Services.InCookies
             cookies.Delete(cartName);
             cookies.Append(cartName, cookie);
         }
+        public InCookiesCartService(IHttpContextAccessor httpContextAccessor, IProductData productData)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+            this.productData = productData;
+
+            var user = httpContextAccessor.HttpContext!.User;
+            var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
+
+            cartName = $"WebStore.Cart{user_name}";
+        }
+
 
 
         public void Add(int id)
         {
             var cart = Cart;
             var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
-            if (item is null) { cart.cartItems.Add(new CartItem { ProductId = id }); }
+            if (item is null) { cart.cartItems.Add(new CartItem { ProductId = id, Quantity=1}); }
             else { item.Quantity++; }
             Cart = cart;
         }
