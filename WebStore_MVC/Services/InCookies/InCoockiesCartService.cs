@@ -36,15 +36,11 @@ namespace WebStore_MVC.Services.InCookies
                 ReplaceCookies(cookies, cart_cookie);
                 return JsonConvert.DeserializeObject<Cart>(cart_cookie);
             }
-
             set
             {
                 ReplaceCookies(httpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
             }
         }
-
-
-
         private void ReplaceCookies(IResponseCookies cookies, string cookie)
         {
             cookies.Delete(cartName);
@@ -66,8 +62,8 @@ namespace WebStore_MVC.Services.InCookies
         public void Add(int id)
         {
             var cart = Cart;
-            var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
-            if (item is null) { cart.cartItems.Add(new CartItem { ProductId = id, Quantity=1}); }
+            var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
+            if (item is null) { cart.CartItems.Add(new CartItem { ProductId = id, Quantity=1}); }
             else { item.Quantity++; }
             Cart = cart;
         }
@@ -75,7 +71,7 @@ namespace WebStore_MVC.Services.InCookies
         public void Decrement(int id)
         {
             var cart = Cart;
-            var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
+            var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
             if (item is null)
             { return; }
 
@@ -83,7 +79,7 @@ namespace WebStore_MVC.Services.InCookies
             { item.Quantity--; }
 
             if (item.Quantity <= 0)
-            { cart.cartItems.Remove(item); }
+            { cart.CartItems.Remove(item); }
 
             Cart = cart;
         }
@@ -91,17 +87,17 @@ namespace WebStore_MVC.Services.InCookies
         public void Remove(int id)
         {
             var cart = Cart;
-            var item = cart.cartItems.FirstOrDefault(i => i.ProductId == id);
+            var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
             if (item is null)
             { return; }
 
-            cart.cartItems.Remove(item);
+            cart.CartItems.Remove(item);
             Cart = cart;
         }
         public void Clear()
         {
             var cart = Cart;
-            cart.cartItems.Clear();
+            cart.CartItems.Clear();
             Cart = cart;
         }
 
@@ -110,14 +106,14 @@ namespace WebStore_MVC.Services.InCookies
         {
             var products = productData.GetProducts(new ProductFilter
             {
-                Ids = Cart.cartItems.Select(i => i.ProductId).ToArray()
+                Ids = Cart.CartItems.Select(i => i.ProductId).ToArray()
             });
 
             var products_views = products.ToView().ToDictionary(p => p.Id);
 
             return new CartViewModel
             {
-                Items = Cart.cartItems
+                Items = Cart.CartItems
                 .Where(item => products_views.ContainsKey(item.ProductId))
                 .Select(item => (products_views[item.ProductId], item.Quantity))
             };
