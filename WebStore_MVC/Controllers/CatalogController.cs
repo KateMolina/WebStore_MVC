@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain;
+using WebStore_MVC.Infrastructure.Mapping;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
 
@@ -17,7 +18,7 @@ namespace WebStore_MVC.Controllers
         {
             _ProductData = productData;
         }
-        
+
         public IActionResult Index(int? BrandId, int? SectionId)
         {
             var filter = new ProductFilter
@@ -34,16 +35,18 @@ namespace WebStore_MVC.Controllers
                 SectionId = SectionId,
                 Products = products
                 .OrderBy(p => p.Order)
-                .Select(p => new ProductViewModel
-                {
-                    Id=p.Id,
-                    Name=p.Name,
-                    Price=p.Price,
-                    ImageUrl=p.ImageUrl,
-                })
-
-
-            }) ;
+                .ToView()
+            }); ;
         }
+
+
+       public IActionResult ProductDetails(int id)
+        {
+            var product = _ProductData.GetProductById(id);
+            if (product is null) return NotFound();
+
+            return View(product.ToView());
+        }
+
     }
 }

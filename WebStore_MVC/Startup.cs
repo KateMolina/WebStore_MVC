@@ -8,12 +8,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.DAL.Context;
+using WebStore.Domain.Entities.Identity;
+using WebStore_MVC.Data;
 using WebStore_MVC.Infrastructure;
 using WebStore_MVC.Infrastructure.Conventions;
 using WebStore_MVC.Services;
+using WebStore_MVC.Services.InCookies;
+using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC
@@ -27,22 +34,56 @@ namespace WebStore_MVC
 
         public IConfiguration Configuration { get; }
 
-      
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            services.AddSingleton<IProductData, InMemoryProductData>();
 
-            //services.AddScoped<ITestService, TestService>();
-            //services.AddScoped<IPrinter, DebuPrinter>();
-            services.AddControllersWithViews(opt=>opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("MSSQL")));
+            services.AddTransient<WebStoreDBInitializer>();
+            services.AddScoped<IProductData, SqlProductData>();
+            services.AddScoped<IEmployeesData, SqlEmployeesData>();
+            services.AddScoped<ICartService, InCookiesCartService>();
+            services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreDB>().AddDefaultTokenProviders();
+            services.Configure<IdentityOptions>(opt =>
+            {
+#if DEBUG
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequiredUniqueChars = 3;
+#endif
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                opt.Lockout.AllowedForNewUsers = false;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+            });
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.Cookie.Name = "WebStore.GB";
+                opt.Cookie.HttpOnly = true;
+                opt.ExpireTimeSpan = TimeSpan.FromDays(10);
+
+                opt.LoginPath = "/Account/Login";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+                opt.LogoutPath = "/Account/Logout";
+
+                opt.SlidingExpiration = true;
+            });
+
         }
 
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            //var testServ = serviceProvider.GetRequiredService<ITestService>();
-            //testServ.Test();
+            using (var scope = serviceProvider.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
+            }
+
 
             if (env.IsDevelopment())
             {
@@ -71,9 +112,10 @@ namespace WebStore_MVC
             #endregion
 
             app.UseWelcomePage("/WelcomePage");
-            #region useAuthorization
-            // app.UseAuthorization();
-            #endregion
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/greeting", async context =>
@@ -87,41 +129,4 @@ namespace WebStore_MVC
 
         }
     }
-
-    //interface ITestService
-    //{
-    //    void Test();
-    //}
-
-    //class TestService : ITestService
-    //{
-    //    private IPrinter _Printer;
-
-    //    public TestService(IPrinter printer)
-    //    {
-    //        _Printer = printer;
-    //    }
-
-    //    public void Test()
-    //    {
-    //        _Printer.Print("TestServiceStarted");
-    //    }
-    //}
-
-    //interface IPrinter
-    //{
-    //    void Print(string str);
-    //}
-
-    //class DebuPrinter : IPrinter
-    //{
-    //    public DebuPrinter()
-    //    {
-
-    //    }
-    //    public void Print(string str)
-    //    {
-    //        Debug.WriteLine(str);
-    //    }
-    //}
 }

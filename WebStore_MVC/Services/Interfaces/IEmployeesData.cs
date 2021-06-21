@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebStore_MVC.Models;
+using WebStore.Domain.Entities;
 
 namespace WebStore_MVC.Services.Interfaces
 {
@@ -8,12 +9,12 @@ namespace WebStore_MVC.Services.Interfaces
     {
         IEnumerable<Employee> GetAll();
 
-        Employee Get(int id);
+       public Employee Get(int id);
 
-        int Add(Employee employee);
+        public int Add(Employee employee);
 
-        void Update(Employee employee);
+       public void Update(Employee employee);
 
-        bool Delete(int id);
+       public bool Delete(int id);
     }
 }

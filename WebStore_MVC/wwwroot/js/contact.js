@@ -1,7 +1,7 @@
-jQuery(function($) {'use strict',
+jQuery(function($) {
 
 	var form = $('.contact-form');
-	form.submit(function () {'use strict',
+	form.submit(function () {
 		$this = $(this);
 		$.post("sendemail.php", $(".contact-form").serialize(),function(result){
 			if(result.type == 'success'){

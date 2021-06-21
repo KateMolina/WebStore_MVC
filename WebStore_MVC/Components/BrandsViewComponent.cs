@@ -8,7 +8,7 @@ using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Components
 {
-    public class BrandsViewComponent:ViewComponent
+    public class BrandsViewComponent : ViewComponent
     {
         private readonly IProductData _ProductData;
 
@@ -17,10 +17,10 @@ namespace WebStore_MVC.Components
             _ProductData = productData;
         }
 
-        public IViewComponentResult Invoke()=> View(GetBrands());
-        
+        public IViewComponentResult Invoke() => View(GetBrands());
 
-        public IEnumerable<BrandViewModel> GetBrands()=>
+
+        public IEnumerable<BrandViewModel> GetBrands() =>
 
             _ProductData.GetBrands().OrderBy(b => b.Order).Select(b => new BrandViewModel
             {

@@ -8,9 +8,9 @@ namespace WebStore_MVC.Data
     {
         public static List<Employee> Employees { get; } = new()
         {
-            new Employee { Id = 1, FirstName = "Mia", LastName = "Anderson", Age = 18 },
-            new Employee { Id = 2, FirstName = "Emma", LastName = "Branson", Age = 27 },
-            new Employee { Id = 3, FirstName = "Sam", LastName = "Davidson", Age = 34 }
+            new Employee { Id = 1, Name = "Mia", LastName = "Anderson", Age = 18 },
+            new Employee { Id = 2, Name = "Emma", LastName = "Branson", Age = 27 },
+            new Employee { Id = 3, Name = "Sam", LastName = "Davidson", Age = 34 }
         };
 
         public static IEnumerable<Section> Sections { get; } = new[]

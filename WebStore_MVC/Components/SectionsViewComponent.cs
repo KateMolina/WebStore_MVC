@@ -47,12 +47,12 @@ namespace WebStore_MVC.Components
                 parent_section.ChildSections.Sort((a, b) => Comparer<int>.Default.Compare(a.Order, b.Order));
             }
 
-                    parent_section_views.Sort((a, b) => Comparer<int>.Default.Compare(a.Order, b.Order));
-                
+            parent_section_views.Sort((a, b) => Comparer<int>.Default.Compare(a.Order, b.Order));
+
             return View(parent_section_views);
 
-               
-            
+
+
         }
     }
 }

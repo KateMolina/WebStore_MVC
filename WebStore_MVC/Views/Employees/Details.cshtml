@@ -1,6 +1,7 @@
-@model WebStore_MVC.Models.Employee
+@using WebStore.Domain.Entities.Identity
+@model WebStore.Domain.Entities.Employee  
 @{
-    ViewData["Title"] = $"{Model.FirstName}'s Info";
+    ViewData["Title"] = $"{Model.Name}'s Info";
 }
 
 
@@ -18,10 +19,10 @@
                 @Html.DisplayFor(model => model.Id)
             </dd> 
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.Name)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.FirstName)
+                @Html.DisplayFor(model => model.Name)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.LastName)
@@ -40,7 +41,10 @@
     <div>
         @*Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
         <a asp-action="Index">Back to List </a>|
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit </a>|
+        @if (User.IsInRole(Role.administrators))
+        {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit </a>
         <a asp-action="Delete" asp-route-id="@Model.Id">Delete </a>
+        }
     </div>
 </div>
