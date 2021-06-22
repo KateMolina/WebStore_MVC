@@ -29,7 +29,10 @@ namespace WebStore_MVC.Services
         }
 
         public Product GetProductById(int id) => TestData.Products.SingleOrDefault(p => p.Id ==id);
-        
-        
+
+        public void Update(Product item)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

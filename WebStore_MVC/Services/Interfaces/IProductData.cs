@@ -15,5 +15,6 @@ namespace WebStore_MVC.Services.Interfaces
 
         IEnumerable<Product> GetProducts(ProductFilter filter = null);
         Product GetProductById(int id);
+        void Update(Product item);
     }
 }

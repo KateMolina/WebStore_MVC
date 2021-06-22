@@ -30,6 +30,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Views\Home\Partial\" />
     <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />

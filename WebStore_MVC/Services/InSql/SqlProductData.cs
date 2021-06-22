@@ -7,6 +7,7 @@ using WebStore.DAL.Context;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore_MVC.Services.Interfaces;
+using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Services.InSql
 {
@@ -49,6 +50,15 @@ namespace WebStore_MVC.Services.InSql
                  .Include(p => p.Section)
                  .SingleOrDefault(p => p.Id == id);
             return product;
+        }
+
+        public void Update(Product product)
+        {
+            if (product is null) throw new ArgumentNullException(nameof(product));
+            var modifiedProduct = GetProductById(product.Id);
+            modifiedProduct.Name = product.Name;
+            modifiedProduct.Price = product.Price;
+            _db.SaveChanges();
         }
     }
 }
