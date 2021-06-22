@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebStore.DAL.Context;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Identity;
+using WebStore_MVC.Infrastructure.Mapping;
 using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
@@ -18,12 +19,12 @@ namespace WebStore_MVC.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductData productData;
-        private readonly WebStoreDB db;
+       
 
-        public ProductsController(IProductData productData, WebStoreDB db)
+        public ProductsController(IProductData productData)
         {
             this.productData = productData;
-            this.db = db;
+       
         }
         public IActionResult Index()
         {
@@ -59,8 +60,22 @@ namespace WebStore_MVC.Areas.Admin.Controllers
 
 
 
-        public IActionResult Delete(int id) =>
-            productData.GetProductById(id) is { } product ? View(product) : NotFound();
+        public IActionResult Delete(int id) 
+        {
+            var product = productData.GetProductById(id);
+            if (product is null) { NotFound(); }
+
+            return View(product.ToView());
+        }
+
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {         
+            productData.Remove(id);
+
+            return RedirectToAction("Index");
+        }
+            
 
 
     }

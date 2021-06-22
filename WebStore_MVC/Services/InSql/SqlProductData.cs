@@ -60,5 +60,14 @@ namespace WebStore_MVC.Services.InSql
             modifiedProduct.Price = product.Price;
             _db.SaveChanges();
         }
+
+        public void Remove(int id)
+        {
+            var product = GetProductById(id);
+            _db.Products.Remove(product);
+            _db.SaveChanges();
+        }
+
+       
     }
 }

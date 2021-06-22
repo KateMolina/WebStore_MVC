@@ -34,5 +34,10 @@ namespace WebStore_MVC.Services
         {
             throw new System.NotImplementedException();
         }
+
+        public void Remove(int id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
