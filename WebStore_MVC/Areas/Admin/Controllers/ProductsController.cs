@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace WebStore_MVC.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductData productData;
-       
+        private readonly ILogger<ProductsController> logger;
 
-        public ProductsController(IProductData productData)
+        public ProductsController(IProductData productData, ILogger<ProductsController> logger)
         {
             this.productData = productData;
-       
+            this.logger = logger;
         }
         public IActionResult Index()
         {
@@ -33,19 +34,24 @@ namespace WebStore_MVC.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
+            logger.LogInformation("Modifying product id: {0} has started", id);
             var product = productData.GetProductById(id);
             if (product is null) { NotFound(); }
+
+            logger.LogInformation("Editing product of id: {0} is in progress, viewmodel created", id);
 
             return View(new ProductViewModel
             {
                 Name = product.Name,
-                Price = product.Price
+                Price = product.Price,
             });
         }
 
         [HttpPost]
         public IActionResult Edit(ProductViewModel productViewModel)
         {
+            logger.LogInformation("Editing product...");
+
             var item = new Product
             {
                 Id = productViewModel.Id,
@@ -55,12 +61,13 @@ namespace WebStore_MVC.Areas.Admin.Controllers
             };
             productData.Update(item);
 
+            logger.LogInformation("Product of id: {0} has been modified", item.Id);
             return RedirectToAction("Index");
         }
 
 
 
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
             var product = productData.GetProductById(id);
             if (product is null) { NotFound(); }
@@ -70,12 +77,14 @@ namespace WebStore_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
-        {         
+        {
+            logger.LogInformation($"Deleting  item id: {id}");
             productData.Remove(id);
 
+            logger.LogInformation($"Item id: {id} has been removed");
             return RedirectToAction("Index");
         }
-            
+
 
 
     }
