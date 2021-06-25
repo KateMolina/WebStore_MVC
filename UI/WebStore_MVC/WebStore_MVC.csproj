@@ -58,12 +58,10 @@
     <None Include="wwwroot\admin\js\jquery-1.10.2.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebStore.DAL.SqlLight\WebStore.DAL.Sqlite.csproj" />
-    <ProjectReference Include="..\WebStore.Domain\WebStore.Domain.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\WebStore.DAL\WebStore.DAL.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\..\Common\WebStore.Domain\WebStore.Domain.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.DAL.SqlLight\WebStore.DAL.Sqlite.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.DAL\WebStore.DAL.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.Interfaces\WebStore.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.Services\WebStore.Services.csproj" />
   </ItemGroup>
 </Project>

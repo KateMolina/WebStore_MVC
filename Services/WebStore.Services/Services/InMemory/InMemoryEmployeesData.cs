@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebStore_MVC.Data;
-using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
 using WebStore.Domain.Entities;
 

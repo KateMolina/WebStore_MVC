@@ -5,11 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WebStore.DAL\WebStore.DAL.csproj" />
+    <ProjectReference Include="..\WebStore.Interfaces\WebStore.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

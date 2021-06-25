@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using System.Collections.Generic;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
 
