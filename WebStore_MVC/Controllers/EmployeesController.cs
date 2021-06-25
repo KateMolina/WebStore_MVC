@@ -10,7 +10,6 @@ using WebStore.Domain.Entities.Identity;
 using WebStore_MVC.Models;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
-
 namespace WebStore_MVC.Controllers
 {
     // [Route("Staff")]

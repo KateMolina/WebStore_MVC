@@ -11,7 +11,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">
@@ -31,6 +30,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Views\Home\Partial\" />
     <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />
@@ -51,6 +51,14 @@
     <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="wwwroot\admin\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\admin\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\admin\js\bootstrap.min.js" />
+    <None Include="wwwroot\admin\js\custom.js" />
+    <None Include="wwwroot\admin\js\jquery-1.10.2.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebStore.DAL.SqlLight\WebStore.DAL.Sqlite.csproj" />
     <ProjectReference Include="..\WebStore.Domain\WebStore.Domain.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>

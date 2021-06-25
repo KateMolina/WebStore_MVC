@@ -8,16 +8,8 @@ namespace WebStore.Domain.Entities
 {
     public class Cart
     {
-        public ICollection<CartItem> cartItems { get; set; } = new List<CartItem>();
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
-        public int ItemsCount => cartItems?.Sum(item => item.Quantity) ?? 0;
-    }
-
-    public class CartItem
-    {
-        public int ProductId { get; set; }
-
-        public int Quantity { get; set; }
-
+        public int ItemsCount => CartItems?.Sum(item => item.Quantity) ?? 0;
     }
 }

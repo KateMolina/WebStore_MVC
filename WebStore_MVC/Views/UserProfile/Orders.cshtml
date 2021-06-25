@@ -1,0 +1,31 @@
+﻿@model IEnumerable<WebStore_MVC.ViewModels.UserOrderViewModel>
+
+@{
+    ViewBag.Title = "User Orders";
+    Layout = "_UserProfileLayout";
+ }
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Total Sum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ var i = 1;}
+        @foreach(var order in Model)
+            {
+        <tr>
+            <td>@(i++) </td>
+            <td>@order.Name </td>
+            <td>@order.Address </td>
+            <td>@order.Phone </td>
+            <td>@order.TotalPrice </td>
+        </tr>
+            }
+    </tbody>
+</table>
