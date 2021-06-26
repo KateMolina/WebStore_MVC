@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebStore.Interfaces.TestAPI
 {
-   public interface IValuesInterface
+   public interface IValuesService
     {
         IEnumerable<string> GetAll();
 
@@ -16,7 +16,7 @@ namespace WebStore.Interfaces.TestAPI
 
         void Edit(int index, string s);
 
-        void Delete(int index);
+        bool Delete(int index);
 
     }
 }
