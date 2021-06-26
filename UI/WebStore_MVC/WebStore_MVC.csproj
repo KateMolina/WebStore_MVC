@@ -63,5 +63,6 @@
     <ProjectReference Include="..\..\Services\WebStore.DAL\WebStore.DAL.csproj" />
     <ProjectReference Include="..\..\Services\WebStore.Interfaces\WebStore.Interfaces.csproj" />
     <ProjectReference Include="..\..\Services\WebStore.Services\WebStore.Services.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.WebAPIClients\WebStore.WebAPI.Clients.csproj" />
   </ItemGroup>
 </Project>
