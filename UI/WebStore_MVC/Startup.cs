@@ -88,7 +88,7 @@ namespace WebStore_MVC
                 opt.SlidingExpiration = true;
             });
 
-            services.AddHttpClient<IValuesService, ValuesClient>(client=>client.BaseAddress=new Uri(Configuration["WebAPI"]));
+            services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
 
         }
 

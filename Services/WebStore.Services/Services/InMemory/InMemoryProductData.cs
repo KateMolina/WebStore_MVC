@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using WebStore.Domain;
@@ -8,6 +9,8 @@ using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC.Services
 {
+ 
+    [Obsolete("Not supported anymore", true)]
     public class InMemoryProductData:IProductData
     {
 
