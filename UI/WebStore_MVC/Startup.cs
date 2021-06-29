@@ -22,6 +22,7 @@ using WebStore_MVC.Services;
 using WebStore_MVC.Services.InCookies;
 using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
+using WebStore.WebAPI.Clients.Employees;
 
 namespace WebStore_MVC
 {
@@ -89,6 +90,7 @@ namespace WebStore_MVC
             });
 
             services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
+            services.AddHttpClient<IEmployeesData, EmployeesClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
 
         }
 
