@@ -17,7 +17,7 @@ namespace WebStore_MVC.Services.InSql
         private readonly WebStoreDB _db;
         private readonly ILogger<SqlProductData> logger;
 
-        public SqlProductData(WebStoreDB db, ILogger<SqlProductData>logger)
+        public SqlProductData(WebStoreDB db, ILogger<SqlProductData> logger)
         {
             _db = db;
             this.logger = logger;
@@ -77,6 +77,12 @@ namespace WebStore_MVC.Services.InSql
             _db.SaveChanges();
         }
 
-       
+        public Section GetSection(int id) => _db.Sections.Include(s => s.Products).FirstOrDefault(s => s.Id == id);
+
+
+        public Brand GetBrand(int id)=>_db.Brands.Include(b => b.Products).FirstOrDefault(b => b.Id == id);
+
+
+
     }
 }

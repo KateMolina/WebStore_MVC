@@ -42,5 +42,15 @@ namespace WebStore_MVC.Services
         {
             throw new System.NotImplementedException();
         }
+
+        public Section GetSection(int id)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Brand GetBrand(int id)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
