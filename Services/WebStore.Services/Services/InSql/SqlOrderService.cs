@@ -26,11 +26,13 @@ namespace WebStore_MVC.Services.InSql
         public async Task<Order> GetOrderById(int id) => await db.Order
             .Include(order => order.User)
             .Include(order => order.Items)
+            .ThenInclude(item => item.Product)
             .FirstOrDefaultAsync(order => order.Id == id);
 
-        public async Task<IEnumerable<Order>> GetUserOrder(string userName) => await db.Order
+        public async Task<IEnumerable<Order>> GetUserOrders(string userName) => await db.Order
             .Include(order => order.User)
             .Include(order => order.Items)
+            .ThenInclude(item=>item.Product)
             .Where(order => order.User.UserName == userName)
             .ToArrayAsync();
         public async Task<Order> CreateOrder(string userName, CartViewModel cart, OrderViewModel orderViewModel)
@@ -38,7 +40,7 @@ namespace WebStore_MVC.Services.InSql
             var user = await userManager.FindByNameAsync(userName);
             if (user is null)
                 throw new InvalidOperationException($"User {userName} is not in the DB");
-            
+
             await using var transaction = await db.Database.BeginTransactionAsync();
 
             var order = new Order
@@ -61,10 +63,10 @@ namespace WebStore_MVC.Services.InSql
                 cart_product => cart_product.Id,
                 (cart_item, cart_product) => new OrderItem
                 {
-                    Order=order,
-                    Product=cart_product,
-                    Price=cart_product.Price,
-                    Quantity=cart_item.Quantity,
+                    Order = order,
+                    Product = cart_product,
+                    Price = cart_product.Price,
+                    Quantity = cart_item.Quantity,
                 }).ToArray();
 
             await db.Order.AddAsync(order);
