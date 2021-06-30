@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Domain;
+using WebStore.Domain.DTO;
 using WebStore.Interfaces;
 using WebStore_MVC.Services.Interfaces;
 
@@ -23,24 +24,24 @@ namespace WebStore.API.Controllers
         [HttpGet("sections")]
         public IActionResult GetSections()
         {
-            return Ok(productData.GetSections());
+            return Ok(productData.GetSections().ToDTO());
         }
 
         [HttpGet("sections/{id:int}")]
-        public IActionResult GetSection(int id) => Ok(productData.GetBrand(id));
+        public IActionResult GetSection(int id) => Ok(productData.GetBrand(id).ToDTO());
 
         [HttpGet("brands")]
         public IActionResult GetBrands()
         {
-            return Ok(productData.GetBrands());
+            return Ok(productData.GetBrands().ToDTO());
         }
 
         [HttpGet("brands/{id:int}")]
-        public IActionResult GetBrand(int id) => Ok(productData.GetBrand(id));
+        public IActionResult GetBrand(int id) => Ok(productData.GetBrand(id).ToDTO());
         [HttpPost]
-        public IActionResult GetProducts(ProductFilter filter = null) => Ok(productData.GetProducts(filter));
+        public IActionResult GetProducts(ProductFilter filter = null) => Ok(productData.GetProducts(filter).ToDTO());
 
         [HttpGet("{id:int}")]
-        public IActionResult GetProduct(int id) => Ok(productData.GetProductById(id));
+        public IActionResult GetProduct(int id) => Ok(productData.GetProductById(id).ToDTO());
     }
 }

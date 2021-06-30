@@ -42,7 +42,7 @@ namespace WebStore.Domain.DTO
 
         public int Order { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
     }
 
     public static class BrandDTOMapper
@@ -86,7 +86,7 @@ namespace WebStore.Domain.DTO
                 Id = section.Id,
                 Name = section.Name,
                 Order = section.Order,
-                ParentId = (int)section.ParentId,
+                ParentId = section.ParentId,
 
             };
         }

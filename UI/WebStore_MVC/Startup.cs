@@ -23,6 +23,7 @@ using WebStore_MVC.Services.InCookies;
 using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
 using WebStore.WebAPI.Clients.Employees;
+using WebStore.WebAPI.Clients.Products;
 
 namespace WebStore_MVC
 {
@@ -55,8 +56,8 @@ namespace WebStore_MVC
 
             services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
             services.AddTransient<WebStoreDBInitializer>();
-            services.AddScoped<IProductData, SqlProductData>();
-            services.AddScoped<IEmployeesData, SqlEmployeesData>();
+            //services.AddScoped<IProductData, SqlProductData>();
+            //services.AddScoped<IEmployeesData, SqlEmployeesData>();
             services.AddScoped<ICartService, InCookiesCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
             services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreDB>().AddDefaultTokenProviders();
@@ -91,6 +92,7 @@ namespace WebStore_MVC
 
             services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
             services.AddHttpClient<IEmployeesData, EmployeesClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
+            services.AddHttpClient<IProductData, ProductsClient>(client => client.BaseAddress = new Uri(Configuration["WebAPI"]));
 
         }
 
