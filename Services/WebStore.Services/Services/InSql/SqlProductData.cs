@@ -25,7 +25,7 @@ namespace WebStore_MVC.Services.InSql
 
         public IEnumerable<Brand> GetBrands() => _db.Brands;
 
-        public IEnumerable<Section> GetSections() => _db.Sections;
+        public IEnumerable<Section> GetSections() => _db.Sections.Include(p=>p.Products);
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
@@ -77,12 +77,14 @@ namespace WebStore_MVC.Services.InSql
             _db.SaveChanges();
         }
 
-        public Section GetSection(int id) => _db.Sections.Include(s => s.Products).FirstOrDefault(s => s.Id == id);
+        public Section Getbrand(int id) => _db.Sections.Include(s => s.Products).FirstOrDefault(s => s.Id == id);
 
 
         public Brand GetBrand(int id)=>_db.Brands.Include(b => b.Products).FirstOrDefault(b => b.Id == id);
 
-
-
+        public Section GetSection(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

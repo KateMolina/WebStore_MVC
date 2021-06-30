@@ -43,7 +43,7 @@ namespace WebStore_MVC.Services
             throw new System.NotImplementedException();
         }
 
-        public Section GetSection(int id)
+        public Section Getbrand(int id)
         {
             throw new NotSupportedException();
         }
@@ -51,6 +51,11 @@ namespace WebStore_MVC.Services
         public Brand GetBrand(int id)
         {
             throw new NotSupportedException();
+        }
+
+        public Section GetSection(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

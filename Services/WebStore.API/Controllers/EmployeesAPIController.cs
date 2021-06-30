@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Domain.Entities;
+using WebStore.Interfaces;
 using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore.API.Controllers
 {
     [ApiController]
-    [Route("api/employees")]
+    [Route(WebAPIAddresses.Employees)]
     public class EmployeesAPIController : ControllerBase
     {
         private readonly IEmployeesData employeesData;
