@@ -8,6 +8,7 @@ using WebStore.Domain.Entities;
 
 namespace WebStore_MVC.Services
 {
+    [Obsolete("Not supported anymore", true)]
     public class InMemoryEmployeesData:IEmployeesData
     {
         

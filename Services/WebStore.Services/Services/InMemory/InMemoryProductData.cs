@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using WebStore.Domain;
@@ -8,6 +9,8 @@ using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC.Services
 {
+ 
+    [Obsolete("Not supported anymore", true)]
     public class InMemoryProductData:IProductData
     {
 
@@ -38,6 +41,21 @@ namespace WebStore_MVC.Services
         public void Remove(int id)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Section Getbrand(int id)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Brand GetBrand(int id)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Section GetSection(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

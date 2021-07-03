@@ -22,6 +22,9 @@ using WebStore_MVC.Services;
 using WebStore_MVC.Services.InCookies;
 using WebStore_MVC.Services.InSql;
 using WebStore_MVC.Services.Interfaces;
+using WebStore.WebAPI.Clients.Employees;
+using WebStore.WebAPI.Clients.Products;
+using WebStore.WebAPI.Clients.Orders;
 
 namespace WebStore_MVC
 {
@@ -54,10 +57,10 @@ namespace WebStore_MVC
 
             services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
             services.AddTransient<WebStoreDBInitializer>();
-            services.AddScoped<IProductData, SqlProductData>();
-            services.AddScoped<IEmployeesData, SqlEmployeesData>();
+            //services.AddScoped<IProductData, SqlProductData>();
+            //services.AddScoped<IEmployeesData, SqlEmployeesData>();
             services.AddScoped<ICartService, InCookiesCartService>();
-            services.AddScoped<IOrderService, SqlOrderService>();
+            //services.AddScoped<IOrderService, SqlOrderService>();
             services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreDB>().AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(opt =>
             {
@@ -88,7 +91,14 @@ namespace WebStore_MVC
                 opt.SlidingExpiration = true;
             });
 
-            services.AddHttpClient<IValuesService, ValuesClient>(client=>client.BaseAddress=new Uri(Configuration["WebAPI"]));
+
+            services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebAPI"]))
+                .AddTypedClient<IValuesService, ValuesClient>()
+                .AddTypedClient<IEmployeesData, EmployeesClient>()
+                .AddTypedClient<IProductData, ProductsClient>()
+                .AddTypedClient<IOrderService, OrdersClient>();
+
+
 
         }
 
