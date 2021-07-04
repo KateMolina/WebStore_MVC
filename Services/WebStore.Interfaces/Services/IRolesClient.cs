@@ -3,7 +3,7 @@ using WebStore.Domain.Entities.Identity;
 
 namespace WebStore.Interfaces.Services
 {
-    public interface IRolesStore :IRoleStore<Role>
+    public interface IRolesClient :IRoleStore<Role>
     {
 
     }
