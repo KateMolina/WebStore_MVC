@@ -26,6 +26,7 @@ namespace WebStore.WebAPI.Clients.Base
         protected async Task<T> GetAsync<T>(string str, CancellationToken Cancel = default)
         {
             var response = await Http.GetAsync(str, Cancel).ConfigureAwait(false);
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent) return default;
             return await response.EnsureSuccessStatusCode().Content.ReadFromJsonAsync<T>(cancellationToken: Cancel).ConfigureAwait(false);
         }
 

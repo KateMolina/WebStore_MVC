@@ -16,7 +16,7 @@ using WebStore.WebAPI.Clients.Base;
 
 namespace WebStore.WebAPI.Clients.Identity
 {
-    class UsersClient : BaseClient, IUsersClient
+   public class UsersClient : BaseClient, IUsersClient
     {
         public UsersClient(HttpClient client) : base(client, WebAPIAddresses.Users)
         {

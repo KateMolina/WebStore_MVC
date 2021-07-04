@@ -14,7 +14,7 @@ using WebStore.WebAPI.Clients.Base;
 
 namespace WebStore.WebAPI.Clients.Identity
 {
-    class RolesClient : BaseClient, IRolesClient
+   public class RolesClient : BaseClient, IRolesClient
     {
         public RolesClient(HttpClient client) : base(client, WebAPIAddresses.Roles)
         {

@@ -25,6 +25,7 @@ using WebStore_MVC.Services.Interfaces;
 using WebStore.WebAPI.Clients.Employees;
 using WebStore.WebAPI.Clients.Products;
 using WebStore.WebAPI.Clients.Orders;
+using WebStore.WebAPI.Clients.Identity;
 
 namespace WebStore_MVC
 {
@@ -40,28 +41,45 @@ namespace WebStore_MVC
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var database_name = Configuration["Database"];
-            switch (database_name)
-            {
-                case "MSSQL":
-                    services.AddDbContext<WebStoreDB>(opt =>
-              opt.UseSqlServer(Configuration.GetConnectionString("MSSQL")));
-                    break;
-                case "Sqlite":
-                    services.AddDbContext<WebStoreDB>(opt =>
-          opt.UseSqlite(Configuration.GetConnectionString("Sqlite"),
-          o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));
-                    break;
-            }
+          //  var database_name = Configuration["Database"];
+          //  switch (database_name)
+          //  {
+          //      case "MSSQL":
+          //          services.AddDbContext<WebStoreDB>(opt =>
+          //    opt.UseSqlServer(Configuration.GetConnectionString("MSSQL")));
+          //          break;
+          //      case "Sqlite":
+          //          services.AddDbContext<WebStoreDB>(opt =>
+          //opt.UseSqlite(Configuration.GetConnectionString("Sqlite"),
+          //o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));
+          //          break;
+          //  }
 
 
             services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
-            services.AddTransient<WebStoreDBInitializer>();
-            //services.AddScoped<IProductData, SqlProductData>();
-            //services.AddScoped<IEmployeesData, SqlEmployeesData>();
+           // services.AddTransient<WebStoreDBInitializer>();
             services.AddScoped<ICartService, InCookiesCartService>();
-            //services.AddScoped<IOrderService, SqlOrderService>();
-            services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreDB>().AddDefaultTokenProviders();
+            services.AddIdentity<User, Role>()
+                //.AddEntityFrameworkStores<WebStoreDB>()
+                .AddDefaultTokenProviders();
+
+            //  services.AddHttpClient("WebStoreAPIIdentity", client => client.BaseAddress = new Uri(Configuration["WebAPI"]))
+
+
+            services.AddHttpClient("WebStoreAPIIdentity", client => client.BaseAddress = new Uri(Configuration["WebAPI"]))
+               .AddTypedClient<IUserStore<User>, UsersClient>()
+               .AddTypedClient<IUserRoleStore<User>, UsersClient>()
+               .AddTypedClient<IUserPasswordStore<User>, UsersClient>()
+               .AddTypedClient<IUserEmailStore<User>, UsersClient>()
+               .AddTypedClient<IUserPhoneNumberStore<User>, UsersClient>()
+               .AddTypedClient<IUserTwoFactorStore<User>, UsersClient>()
+               .AddTypedClient<IUserClaimStore<User>, UsersClient>()
+               .AddTypedClient<IUserLoginStore<User>, UsersClient>()
+               .AddTypedClient<IRoleStore<Role>, RolesClient>()
+                ;
+            //services.AddIdentityWebStoreWebAPIClients();
+
+
             services.Configure<IdentityOptions>(opt =>
             {
 #if DEBUG
@@ -103,12 +121,12 @@ namespace WebStore_MVC
         }
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IServiceProvider serviceProvider*/)
         {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
-            }
+            //using (var scope = serviceProvider.CreateScope())
+            //{
+            //    scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
+            //}
 
 
             if (env.IsDevelopment())

@@ -89,8 +89,13 @@ namespace WebStore.API
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
