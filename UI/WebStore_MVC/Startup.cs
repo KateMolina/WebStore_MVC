@@ -77,7 +77,7 @@ namespace WebStore_MVC
             //   .AddTypedClient<IUserLoginStore<User>, UsersClient>()
             //   .AddTypedClient<IRoleStore<Role>, RolesClient>()
             //    ;
-            //services.AddIdentityWebStoreWebAPIClients();
+            services.AddIdentityWebStoreWebAPIClients();
 
 
             services.Configure<IdentityOptions>(opt =>

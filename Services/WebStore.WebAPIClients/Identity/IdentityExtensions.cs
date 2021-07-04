@@ -26,7 +26,7 @@ namespace WebStore.WebAPI.Clients.Identity
                .AddTypedClient<IUserLoginStore<User>, UsersClient>()
                .AddTypedClient<IRoleStore<Role>, RolesClient>()
                 ;
-            services.AddIdentityWebStoreWebAPIClients();
+    
             return services;
         }
 
