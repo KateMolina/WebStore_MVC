@@ -26,6 +26,8 @@ using WebStore.WebAPI.Clients.Employees;
 using WebStore.WebAPI.Clients.Products;
 using WebStore.WebAPI.Clients.Orders;
 using WebStore.WebAPI.Clients.Identity;
+using Microsoft.Extensions.Logging;
+using WebStore.Logger;
 
 namespace WebStore_MVC
 {
@@ -121,12 +123,9 @@ namespace WebStore_MVC
         }
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IServiceProvider serviceProvider*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory log)
         {
-            //using (var scope = serviceProvider.CreateScope())
-            //{
-            //    scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
-            //}
+            log.AddLog4Net();
 
 
             if (env.IsDevelopment())

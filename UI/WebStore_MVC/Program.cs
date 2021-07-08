@@ -15,6 +15,12 @@ namespace WebStore_MVC
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .ConfigureLogging((host, log) => log
+            .ClearProviders()
+            .AddDebug()
+            .AddConsole()
+            .AddEventLog())
+            
                 .ConfigureWebHostDefaults(host => host
                 .UseStartup<Startup>()
                 );

@@ -73,15 +73,19 @@ namespace WebStore_MVC.Controllers
                 );
             if (signInResult.Succeeded)
             {
+                logger.LogInformation("User {0} successfully signed in to the system", model.UserName);
                 return LocalRedirect(model.ReturnUrl ?? "/");
             }
             ModelState.AddModelError("", "User name or password is incorrect");
-
+            logger.LogWarning("Credentials used by  {0} to sign in to the system",
+                model.UserName);
             return View(model);
         }
         public async Task<IActionResult> Logout()
         {
+            var user_name = User.Identity!.Name;
           await signInManager.SignOutAsync();
+            logger.LogInformation("Пользователь {0} вышел из системы", user_name);
             return RedirectToAction("Index", "Home");
         }
         public IActionResult AccessDenied() => View();
