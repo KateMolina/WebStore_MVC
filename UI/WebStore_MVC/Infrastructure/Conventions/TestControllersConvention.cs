@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace WebStore_MVC.Infrastructure.Conventions
 {
-    public class TestControllersConvention:IControllerModelConvention
+    public class TestControllersConvention : IControllerModelConvention
     {
         public TestControllersConvention()
         {

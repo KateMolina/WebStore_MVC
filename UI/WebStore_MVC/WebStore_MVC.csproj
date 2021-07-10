@@ -35,7 +35,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Views\Home\Partial\" />
-    <Folder Include="Infrastructure\MiddleWare\" />
     <Folder Include="Infrastructure\Conventions\" />
     <Folder Include="Views\Employees\" />
     <Folder Include="Views\Shared\Components\Sections\" />
