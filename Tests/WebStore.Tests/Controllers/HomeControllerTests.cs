@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebStore_MVC.Controllers;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
@@ -48,5 +47,52 @@ namespace WebStore.Tests.Controllers
             Assert.IsType<ViewResult>(result);
 
         }
+
+        [TestMethod, ExpectedException(typeof(ApplicationException))]
+        public void Throw_Throws_ApplicationException()
+        {
+            var configuration_mock = new Mock<IConfiguration>();
+            var controller = new HomeController(configuration_mock.Object);
+            const string testErrorMessage = "Test message";
+            var result = controller.Throw(testErrorMessage);
+
+            Assert.IsType<ApplicationException>(result);
+
+        }
+
+        [TestMethod]
+        public void Throw_Throws_ApplicationException2()
+        {
+            var configuration_mock = new Mock<IConfiguration>();
+            var controller = new HomeController(configuration_mock.Object);
+            const string testErrorMessage = "Test message";
+
+            Exception err = null;
+            try
+            {
+               controller.Throw(testErrorMessage);
+            }
+            catch (Exception e)
+            {
+
+                err = e;
+            }
+
+            var res2 = Assert.IsType<ApplicationException>(err);
+
+            Assert.Equal(testErrorMessage, res2.Message);
+        }
+        [TestMethod]
+        public void Throw_Throws_ApplicationException3()
+        {
+            var configuration_mock = new Mock<IConfiguration>();
+            var controller = new HomeController(configuration_mock.Object);
+            const string testErrorMessage = "Test message";
+
+            var exception = Assert.Throws<ApplicationException>(() => controller.Throw(testErrorMessage));
+
+            Assert.Equal(testErrorMessage, exception.Message);
+        }
+
     }
 }
