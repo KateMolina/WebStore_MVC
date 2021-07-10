@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WebStore_MVC.Infrastructure.Mapping;
 using WebStore_MVC.Models;
@@ -15,11 +16,14 @@ namespace WebStore_MVC.Controllers
     public class HomeController : Controller
     {
 
-        private readonly ILogger<HomeController> _logger;
+       // private readonly ILogger<HomeController> _logger;
+        public object index;
+        private readonly IConfiguration config;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(/*ILogger<HomeController> logger*/IConfiguration config)
         {
-            _logger = logger;
+            this.config = config;
+            //_logger = logger;
         }
 
         public IActionResult Index([FromServices]IProductData _ProductData)
@@ -28,13 +32,13 @@ namespace WebStore_MVC.Controllers
             ViewBag.Products = products;
             return View();
         }
+        public IActionResult Throw(string message) => throw new ApplicationException(message ?? "Error in Home Controller");
 
         public IActionResult Privacy()
         {
             return View();
         }
 
-        public IActionResult Throw(string message) => throw new ApplicationException(message ?? "Error in Home Controller");
 
         public IActionResult Blog() => View();
 
