@@ -17,7 +17,7 @@ namespace WebStore_MVC.Controllers
     {
 
        // private readonly ILogger<HomeController> _logger;
-        public object index;
+        //public object index;
         private readonly IConfiguration config;
 
         public HomeController(/*ILogger<HomeController> logger*/IConfiguration config)

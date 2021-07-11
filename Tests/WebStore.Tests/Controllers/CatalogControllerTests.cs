@@ -47,7 +47,7 @@ namespace WebStore.Tests.Controllers
             Assert.Equal(expectedName, model_view.Name);
             Assert.Equal(price, model_view.Price);
 
-            productData_mock.Verify(s => s.GetProductById(It.IsAny<int>());
+            productData_mock.Verify(s => s.GetProductById(It.IsAny<int>()));
             productData_mock.VerifyNoOtherCalls();
         }
     }
