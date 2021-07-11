@@ -15,9 +15,21 @@ namespace WebStore_MVC.Services.InCookies
 {
     public class InCookiesCartService : ICartService
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IProductData productData;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string cartName;
+
+       
+        public InCookiesCartService(IHttpContextAccessor httpContextAccessor, IProductData productData)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+            this.productData = productData;
+
+            var user = httpContextAccessor.HttpContext!.User;
+            var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
+
+            cartName = $"WebStore.Cart{user_name}";
+        }
 
         private Cart Cart
         {
@@ -45,16 +57,6 @@ namespace WebStore_MVC.Services.InCookies
         {
             cookies.Delete(cartName);
             cookies.Append(cartName, cookie);
-        }
-        public InCookiesCartService(IHttpContextAccessor httpContextAccessor, IProductData productData)
-        {
-            this.httpContextAccessor = httpContextAccessor;
-            this.productData = productData;
-
-            var user = httpContextAccessor.HttpContext!.User;
-            var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
-
-            cartName = $"WebStore.Cart{user_name}";
         }
 
 
