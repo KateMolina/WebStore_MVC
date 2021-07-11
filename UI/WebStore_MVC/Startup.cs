@@ -26,6 +26,9 @@ using WebStore.WebAPI.Clients.Employees;
 using WebStore.WebAPI.Clients.Products;
 using WebStore.WebAPI.Clients.Orders;
 using WebStore.WebAPI.Clients.Identity;
+using Microsoft.Extensions.Logging;
+using WebStore.Logger;
+using WebStore_MVC.Infrastructure.MiddleWare;
 
 namespace WebStore_MVC
 {
@@ -56,7 +59,7 @@ namespace WebStore_MVC
           //  }
 
 
-            services.AddControllersWithViews(opt => opt.Conventions.Add(new TestControllersConvention())).AddRazorRuntimeCompilation();
+            services.AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllersConvention())*/).AddRazorRuntimeCompilation();
            // services.AddTransient<WebStoreDBInitializer>();
             services.AddScoped<ICartService, InCookiesCartService>();
             services.AddIdentity<User, Role>()
@@ -121,12 +124,9 @@ namespace WebStore_MVC
         }
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IServiceProvider serviceProvider*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory log)
         {
-            //using (var scope = serviceProvider.CreateScope())
-            //{
-            //    scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();
-            //}
+            log.AddLog4Net();
 
 
             if (env.IsDevelopment())
@@ -144,7 +144,12 @@ namespace WebStore_MVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             #region MiddleWare options
+
             //app.UseMiddleware<TestMiddleWare>();
             //app.Use(async (context, next) => { await next(); });
             //app.Map("/TestMapRequest", opt => opt.Run(async context =>
@@ -156,9 +161,6 @@ namespace WebStore_MVC
             #endregion
 
             app.UseWelcomePage("/WelcomePage");
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebStore.DAL.Context;
 using WebStore.Domain.Entities.Identity;
+using WebStore.Logger;
 using WebStore_MVC.Data;
 using WebStore_MVC.Services.InCookies;
 using WebStore_MVC.Services.InSql;
@@ -89,8 +90,9 @@ namespace WebStore.API
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, ILoggerFactory log)
         {
+            log.AddLog4Net();
             using (var scope = serviceProvider.CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<WebStoreDBInitializer>().Initialize();

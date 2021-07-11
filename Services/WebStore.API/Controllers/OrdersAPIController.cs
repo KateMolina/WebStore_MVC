@@ -22,6 +22,7 @@ namespace WebStore.API.Controllers
         }
 
         [HttpGet("user/{UserName}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<OrderDTO>))]
         public async Task<IActionResult> GetUserOrders(string UserName)
         {
             var orders = await orderService.GetUserOrders(UserName);
@@ -29,6 +30,7 @@ namespace WebStore.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDTO))]
         public async Task<IActionResult> GetUserOrder(int id)
         {
             var order = await orderService.GetOrderById(id);

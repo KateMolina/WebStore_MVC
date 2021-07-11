@@ -33,6 +33,9 @@ namespace WebStore_MVC.Controllers
         {
             return View();
         }
+
+        public IActionResult Throw(string message) => throw new ApplicationException(message ?? "Error in Home Controller");
+
         public IActionResult Blog() => View();
 
         public IActionResult BlogSingle() => View();
@@ -50,10 +53,10 @@ namespace WebStore_MVC.Controllers
 
 
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
