@@ -12,7 +12,7 @@ namespace WebStore_MVC.TagHelpers
         private const string AttributeName = "ws-is-active-route";
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            base.Process(context, output);
+            output.Attributes.RemoveAll(AttributeName);
         }
 
     }
