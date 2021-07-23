@@ -4,7 +4,7 @@
         <li class="dropdown">
             <a href="#">Shop<i class="fa fa-angle-down"></i></a>
             <ul role="menu" class="sub-menu">
-                <li><a asp-controller="Catalog" asp-action="Index">Products</a></li>
+                <li><a ws-is-active-route asp-controller="Catalog" asp-action="Index">Products</a></li>
                 @*<li><a asp-controller="Catalog" asp-action="ProductDetails">Product Details</a></li>*@
                 <li><a asp-controller="Home" asp-action="Checkout">Checkout</a></li>
                 @*<li><a asp-controller="Cart" asp-action="Index">Cart</a></li>*@
@@ -25,6 +25,7 @@
         <li><a asp-controller="WebAPI" asp-action="Index" class="@IsActive("WebAPI")">WebAPI</a></li>
     </ul>
 </div>
+
 
 @functions
 {
