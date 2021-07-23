@@ -15,13 +15,13 @@
         <li class="dropdown">
             <a href="#">Blog<i class="fa fa-angle-down"></i></a>
             <ul role="menu" class="sub-menu">
-                <li><a asp-controller="Home" asp-action="Blog">Blog List</a></li>
-                <li><a asp-controller="Home" asp-action="BlogSingle">Blog Single</a></li>
+                <li><a ws-is-active-route asp-controller="Home" asp-action="Blog">Blog List</a></li>
+                <li><a ws-is-active-route asp-controller="Home" asp-action="BlogSingle">Blog Single</a></li>
             </ul>
         </li>
-        <li><a asp-controller="Home" asp-action="NotFound404">404</a></li>
-        <li><a asp-controller="Home" asp-action="ContactUs">Contact</a></li>
-        <li><a asp-controller="Employees" asp-action="Index">Our Team</a></li>
+        <li><a ws-is-active-route asp-controller="Home" asp-action="NotFound404">404</a></li>
+        <li><a ws-is-active-route asp-controller="Home" asp-action="ContactUs">Contact</a></li>
+        <li><a ws-is-active-route asp-controller="Employees" asp-action="Index">Our Team</a></li>
         <li><a asp-controller="WebAPI" asp-action="Index" class="@IsActive("WebAPI")">WebAPI</a></li>
     </ul>
 </div>
