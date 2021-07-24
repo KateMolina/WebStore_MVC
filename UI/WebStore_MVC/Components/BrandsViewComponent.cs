@@ -17,7 +17,7 @@ namespace WebStore_MVC.Components
             _ProductData = productData;
         }
 
-        public IViewComponentResult Invoke() => View(GetBrands());
+        public IViewComponentResult Invoke(string BrandId) => View(GetBrands());
 
 
         public IEnumerable<BrandViewModel> GetBrands() =>

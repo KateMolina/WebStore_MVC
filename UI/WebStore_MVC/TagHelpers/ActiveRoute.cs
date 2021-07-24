@@ -36,7 +36,7 @@ namespace WebStore_MVC.TagHelpers
             output.Attributes.RemoveAll(AttributeName);
         }
 
-        public bool IsActive(bool IgnoreAction)
+        public bool IsActive(bool IsIgnoreAction)
         {
             var route_values = ViewContext.RouteData.Values;
             var current_controller = route_values["controller"]?.ToString();
@@ -47,7 +47,7 @@ namespace WebStore_MVC.TagHelpers
             if (Controller is { Length: > 0 } controller && !string.Equals(controller, current_controller, str_cmp))
                 return false;
 
-            if (IgnoreAction) return true;
+            if (IsIgnoreAction) return true;
             if (Action is { Length: > 0 } action && !string.Equals(action, current_action, str_cmp))
                 return false;
 
