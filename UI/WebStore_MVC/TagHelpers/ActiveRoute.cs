@@ -24,6 +24,7 @@ namespace WebStore_MVC.TagHelpers
 
         [ViewContext, HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (IsActive())
@@ -64,7 +65,7 @@ namespace WebStore_MVC.TagHelpers
             {
                 if (class_attribute.Value.ToString()?.Contains("active") ?? false)
                     return;
-                output.Attributes.SetAttribute("class", class_attribute.Value + "active"); 
+                output.Attributes.SetAttribute("class", class_attribute.Value + "active");
             }
 
         }
