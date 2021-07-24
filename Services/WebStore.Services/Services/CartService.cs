@@ -10,69 +10,39 @@ using WebStore_MVC.ViewModels;
 using Newtonsoft.Json;
 using WebStore.Domain;
 using WebStore_MVC.Infrastructure.Mapping;
+using WebStore.Interfaces.Services;
 
-namespace WebStore_MVC.Services.InCookies
+namespace WebStore_MVC.Services.Services
 {
-    public class InCookiesCartService : ICartService
+    public class CartService : ICartService
     {
+        private readonly ICartStorage cartStorage;
         private readonly IProductData productData;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly string cartName;
+     
 
        
-        public InCookiesCartService(IHttpContextAccessor httpContextAccessor, IProductData productData)
+        public CartService(ICartStorage cartStorage, IProductData productData)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            this.cartStorage = cartStorage;
             this.productData = productData;
 
-            var user = httpContextAccessor.HttpContext!.User;
-            var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
-
-            cartName = $"WebStore.Cart{user_name}";
+            
         }
 
-        private Cart Cart
-        {
-            get
-            {
-                var context = httpContextAccessor.HttpContext;
-                var cookies = context!.Response.Cookies;
-                var cart_cookie = context.Request.Cookies[cartName];
-
-                if (cart_cookie is null)
-                {
-                    var cart = new Cart();
-                    cookies.Append(cartName, JsonConvert.SerializeObject(cart));
-                    return cart;
-                }
-                ReplaceCookies(cookies, cart_cookie);
-                return JsonConvert.DeserializeObject<Cart>(cart_cookie);
-            }
-            set
-            {
-                ReplaceCookies(httpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
-            }
-        }
-        private void ReplaceCookies(IResponseCookies cookies, string cookie)
-        {
-            cookies.Delete(cartName);
-            cookies.Append(cartName, cookie);
-        }
-
-
+     
 
         public void Add(int id)
         {
-            var cart = Cart;
+            var cart = cartStorage.Cart;
             var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
             if (item is null) { cart.CartItems.Add(new CartItem { ProductId = id, Quantity=1}); }
             else { item.Quantity++; }
-            Cart = cart;
+            cartStorage.Cart = cart;
         }
 
         public void Decrement(int id)
         {
-            var cart = Cart;
+            var cart = cartStorage.Cart;
             var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
             if (item is null)
             { return; }
@@ -83,24 +53,24 @@ namespace WebStore_MVC.Services.InCookies
             if (item.Quantity <= 0)
             { cart.CartItems.Remove(item); }
 
-            Cart = cart;
+            cartStorage.Cart = cart;
         }
 
         public void Remove(int id)
         {
-            var cart = Cart;
+            var cart = cartStorage.Cart;
             var item = cart.CartItems.FirstOrDefault(i => i.ProductId == id);
             if (item is null)
             { return; }
 
             cart.CartItems.Remove(item);
-            Cart = cart;
+            cartStorage.Cart = cart;
         }
         public void Clear()
         {
-            var cart = Cart;
+            var cart = cartStorage.Cart;
             cart.CartItems.Clear();
-            Cart = cart;
+            cartStorage.Cart = cart;
         }
 
 
@@ -108,14 +78,14 @@ namespace WebStore_MVC.Services.InCookies
         {
             var products = productData.GetProducts(new ProductFilter
             {
-                Ids = Cart.CartItems.Select(i => i.ProductId).ToArray()
+                Ids = cartStorage.Cart.CartItems.Select(i => i.ProductId).ToArray()
             });
 
             var products_views = products.ToView().ToDictionary(p => p.Id);
 
             return new CartViewModel
             {
-                Items = Cart.CartItems
+                Items = cartStorage.Cart.CartItems
                 .Where(item => products_views.ContainsKey(item.ProductId))
                 .Select(item => (products_views[item.ProductId], item.Quantity))
             };

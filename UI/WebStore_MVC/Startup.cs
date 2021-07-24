@@ -29,6 +29,9 @@ using WebStore.WebAPI.Clients.Identity;
 using Microsoft.Extensions.Logging;
 using WebStore.Logger;
 using WebStore_MVC.Infrastructure.MiddleWare;
+using WebStore.Interfaces.Services;
+using WebStore.Services.Services.InCookies;
+using WebStore_MVC.Services.Services;
 
 namespace WebStore_MVC
 {
@@ -61,7 +64,10 @@ namespace WebStore_MVC
 
             services.AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllersConvention())*/).AddRazorRuntimeCompilation();
            // services.AddTransient<WebStoreDBInitializer>();
-            services.AddScoped<ICartService, InCookiesCartService>();
+            //services.AddScoped<ICartService, InCookiesCartService>();
+            services.AddScoped<ICartStorage, InCookiesCartStorage>();
+            services.AddScoped<ICartService, CartService>();
+
             services.AddIdentity<User, Role>()
                 .AddIdentityWebStoreWebAPIClients()
                 .AddDefaultTokenProviders();
