@@ -6,6 +6,8 @@
 
 <section>
     <div class="container">
+        @await Component.InvokeAsync("BreadCrumbs")
+
         <div class="row">
             <div class="col-sm-3">
                 <partial name="Partial/_LeftSlideBar" />
