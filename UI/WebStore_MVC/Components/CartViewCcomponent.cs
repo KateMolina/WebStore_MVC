@@ -16,6 +16,10 @@ namespace WebStore_MVC.Components
             this.cartService = cartService;
         }
 
-        public IViewComponentResult Invoke() => View(cartService.GetCartViewModel());
+        public IViewComponentResult Invoke()
+        {
+            ViewBag.Count = cartService.GetCartViewModel().ItemCount;
+            return View();
+        }
     }
 }
