@@ -1,0 +1,7 @@
+﻿@model WebStore_MVC.ViewModels.CartViewModel
+@{ 
+    var item_count = Model.ItemCount;
+    var count = item_count > 0 ? $"({item_count})" : null;
+}
+
+    <i class="fa fa-shopping-cart"></i> Cart @count
