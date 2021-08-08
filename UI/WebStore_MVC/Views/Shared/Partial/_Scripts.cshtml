@@ -10,3 +10,16 @@
 <environment exclude="Development">
     <link href="~/js/site.min.js" rel="stylesheet" asp-append-version="true">
 </environment>
+
+<script src="~/js/Cart/CartLogic.js" asp-append-version="true"></script>
+
+<script>
+    $(function () {
+        Cart.init({
+            getCartViewLink: "@Url.Action("GetCartView", "Cart")",
+            addToCartLink: "@Url.Action("AddAPI", "Cart")",
+            decrementCartLink: "@Url.Action("DecrementAPI", "Cart")",
+            removeFromCartLink: "@Url.Action("RemoveAPI", "Cart")"
+        });
+    })
+</script>
