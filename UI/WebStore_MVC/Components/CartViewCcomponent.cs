@@ -7,11 +7,11 @@ using WebStore_MVC.Services.Interfaces;
 
 namespace WebStore_MVC.Components
 {
-    public class CartViewCcomponent : ViewComponent
+    public class CartViewComponent : ViewComponent
     {
         private readonly ICartService cartService;
 
-        public CartViewCcomponent(ICartService cartService)
+        public CartViewComponent(ICartService cartService)
         {
             this.cartService = cartService;
         }

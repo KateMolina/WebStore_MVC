@@ -66,6 +66,34 @@ namespace WebStore_MVC.Controllers
             ViewBag.OrderId = id;
             return View();
         }
+
+        #region Web-API for js
+
+        public IActionResult GetCartView() => ViewComponent("Cart");
+
+        public IActionResult AddAPI(int id)
+        {
+            cartService.Add(id);
+            return Json(new { id, message = $"Product {id} has been added to the cart"});
+        }
+        public IActionResult RemoveAPI(int id)
+        {
+            cartService.Remove(id);
+            return Ok(new { id, message = $"Product {id} has been removed from the cart" });
+        }
+        public IActionResult DecrementAPI(int id)
+        {
+            cartService.Decrement(id);
+            return Ok();
+        }
+
+        public IActionResult ClearAPI()
+        {
+            cartService.Clear();
+            return Ok();
+        }
+
+        #endregion
     }
 
 
