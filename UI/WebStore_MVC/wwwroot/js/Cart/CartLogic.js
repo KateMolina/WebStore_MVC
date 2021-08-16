@@ -58,7 +58,7 @@
 
         var tr = button.closest("tr");
 
-        $.get(Cart.addToCartLink + "/" + id)
+        $.get(Cart._properties.addToCartLink + "/" + id)
             .done(function () {
                 const count = parseInt($(".cart_quantity_input", tr).val());
                 $(".cart_quantity_input", tr).val(count + 1);
@@ -100,10 +100,21 @@
 
         var button = $(this);
         const id = button.data("id");
+        var tr = button.closest("tr");
 
-        $.get(Cart.addToCartLink + "/" + id)
-            .done(function () { })
-            .fail(function () { console.log("decrementItem fail"));
+        $.get(Cart._properties.decrementCartLink + "/" + id)
+            .done(function () {
+                const count = parseInt($(".cart_quantity_input", tr).val());
+                if (count > 1) {
+                    $(".cart_quantity_input", tr).val(count - 1);
+                    Cart.refreshPrice(tr);
+                } else {
+                    tr.remove();
+                    Cart.refreshTotalPrice();
+                }
+                Cart.refreshCartView();
+            })
+            .fail(function () { console.log("decrementItem fail") });
 
     },
     removeItem: function (event) {
@@ -112,8 +123,12 @@
         var button = $(this);
         const id = button.data("id");
 
-        $.get(Cart.addToCartLink + "/" + id)
-            .done(function () { })
-            .fail(function () { console.log("removeItem fail"));
+        $.get(Cart._properties.removeFromCartLink + "/" + id)
+            .done(function () {
+                button.closest("tr").remove();
+                Cart.refreshTotalPrice();
+                Cart.refreshCartView();
+            })
+            .fail(function () { console.log("removeItem fail") });
     }
 }
