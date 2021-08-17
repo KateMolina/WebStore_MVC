@@ -11,6 +11,7 @@ using WebStore_MVC.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using WebStore_MVC.ViewModels;
 using WebStore.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace WebStore.Tests.Controllers
 {
@@ -36,7 +37,11 @@ namespace WebStore.Tests.Controllers
                     Section = new Section { Id = 1, Name = "section", Order = 1 },
                     ImageUrl = $"img_{id}.png"
                 });
-            var controller = new CatalogController(productData_mock.Object);
+            var configuration_mock = new Mock<IConfiguration>();
+            configuration_mock
+                .Setup(config => config["CatalogPageSize"])
+                .Returns("6");
+            var controller = new CatalogController(productData_mock.Object, configuration_mock.Object);
 
             var res = controller.ProductDetails(expectedId);
 

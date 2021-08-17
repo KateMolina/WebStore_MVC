@@ -11,7 +11,7 @@ using WebStore_MVC.Services.Interfaces;
 using Moq;
 using WebStore.Interfaces.Services;
 using WebStore.Domain;
-using WebStore_MVC.Services.Services;
+//using WebStore_MVC.Services.Services;
 using System.Diagnostics;
 
 namespace WebStore.Services.Tests.Services
@@ -40,7 +40,7 @@ namespace WebStore.Services.Tests.Services
 
             productDataMock = new Mock<IProductData>();
             productDataMock.Setup(c => c.GetProducts(It.IsAny<ProductFilter>()))
-                .Returns(new[]
+                .Returns(new ProductsPage(new[]
                 {
                     new Product
                     {
@@ -76,7 +76,7 @@ namespace WebStore.Services.Tests.Services
                             SectionId = 3,
                             Section = new Section{ Id = 3, Name = "Section 3", Order = 3 },
                         },
-                });
+                }, 3));
 
             cartStorageMock = new Mock<ICartStorage>();
             cartStorageMock.Setup(c => c.Cart).Returns(_Cart);

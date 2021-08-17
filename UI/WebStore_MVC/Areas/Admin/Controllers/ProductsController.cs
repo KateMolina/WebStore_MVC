@@ -29,7 +29,7 @@ namespace WebStore_MVC.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View(productData.GetProducts());
+            return View(productData.GetProducts().Products);
         }
 
         public IActionResult Edit(int id)

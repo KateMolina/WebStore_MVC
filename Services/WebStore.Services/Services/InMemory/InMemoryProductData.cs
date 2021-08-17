@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using WebStore.Domain;
+using WebStore.Domain.DTO;
 using WebStore.Domain.Entities;
 using WebStore_MVC.Data;
 using WebStore_MVC.Services.Interfaces;
@@ -54,6 +55,11 @@ namespace WebStore_MVC.Services
         }
 
         public Section GetSection(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        ProductsPage IProductData.GetProducts(ProductFilter filter)
         {
             throw new NotImplementedException();
         }

@@ -9,6 +9,7 @@ using WebStore.Domain.Entities;
 using WebStore_MVC.Services.Interfaces;
 using WebStore_MVC.ViewModels;
 using Microsoft.Extensions.Logging;
+using WebStore.Domain.DTO;
 
 namespace WebStore_MVC.Services.InSql
 {
@@ -27,7 +28,7 @@ namespace WebStore_MVC.Services.InSql
 
         public IEnumerable<Section> GetSections() => _db.Sections.Include(p=>p.Products);
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter = null)
+        public ProductsPage GetProducts(ProductFilter filter = null)
         {
             IQueryable<Product> query = _db.Products
                 .Include(p => p.Brand)
@@ -44,7 +45,14 @@ namespace WebStore_MVC.Services.InSql
                 if (filter?.BrandId is { } brand_id)
                     query = query.Where(p => p.BrandId == brand_id);
             }
-            return query;
+
+            var total_count = query.Count();
+
+            if (filter is { PageSize: > 0 and var page_size, Page: > 0 and var page_number })
+                query = query
+                    .Skip((page_number - 1) * page_size)
+                    .Take(page_size);
+            return new ProductsPage(query.AsEnumerable(), total_count);
         }
 
         public Product GetProductById(int id)

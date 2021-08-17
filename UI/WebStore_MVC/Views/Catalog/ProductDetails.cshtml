@@ -65,7 +65,8 @@
                                 <label>Quantity:</label>
                                 <input type="text" value="3" />
                                 <a asp-controller="Cart" asp-action="Add" asp-route-id="@Model.Id"
-                                   type="button" class="btn btn-fefault cart">
+                                   data-id="@Model.Id"
+                                   type="button" class="btn btn-fefault cart add-to-cart">
                                     <i class="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </a>
