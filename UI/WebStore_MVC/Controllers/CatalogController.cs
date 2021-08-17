@@ -35,7 +35,7 @@ namespace WebStore_MVC.Controllers
                 PageSize = page_size,
             };
 
-            var products = _ProductData.GetProducts(filter);
+            var (products, total_count) = _ProductData.GetProducts(filter);
 
             return View(new CatalogViewModel
             {
@@ -43,7 +43,13 @@ namespace WebStore_MVC.Controllers
                 SectionId = SectionId,
                 Products = products
                 .OrderBy(p => p.Order)
-                .ToView()
+                .ToView(),
+                PageViewModel = new PageViewModel
+                {
+                    Page = Page,
+                    PageSize = page_size ?? 0,
+                    TotalItems = total_count,
+                },
             }); ;
         }
 
