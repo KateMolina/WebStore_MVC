@@ -44,19 +44,23 @@ namespace WebStore_MVC.TagHelpers
             output.Content.AppendHtml(ul);
         }
 
-        private TagBuilder CreateElement(int pageNumber, IUrlHelper url) 
+        private TagBuilder CreateElement(int pageNumber, IUrlHelper url)
         {
             var li = new TagBuilder("li");
             var a = new TagBuilder("a");
 
+            PageUrlValues["page"] = pageNumber;
             if (pageNumber == PageModel.Page)
-                li.AddCssClass("active");
-            else 
             {
-                PageUrlValues["page"] = pageNumber;
-                a.Attributes["href"] = url.Action(PageAction, PageUrlValues);
+                li.AddCssClass("active");
+                a.MergeAttribute("data-page", pageNumber.ToString());
             }
-
+            else
+            {
+                a.Attributes["href"] = "#"; //url.Action(PageAction, PageUrlValues);
+            }
+            foreach (var (key, value) in PageUrlValues.Where(v => v.Value is not null))
+                a.MergeAttribute($"data-{key}", value.ToString());
             a.InnerHtml.AppendHtml(pageNumber.ToString());
             li.InnerHtml.AppendHtml(a);
             return li;
