@@ -53,7 +53,6 @@ namespace WebStore_MVC.TagHelpers
             if (pageNumber == PageModel.Page)
             {
                 li.AddCssClass("active");
-                a.MergeAttribute("data-page", pageNumber.ToString());
             }
             else
             {
