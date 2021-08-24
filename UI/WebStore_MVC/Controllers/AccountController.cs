@@ -24,6 +24,14 @@ namespace WebStore_MVC.Controllers
             this.signInManager = signInManager;
             this.logger = logger;
         }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> IsNameAvailable(string userName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            return Json(user is null ? "true" : "username is already taken");
+        }
+
         [AllowAnonymous]
         public IActionResult Register() => View(new RegisterViewModel());
 

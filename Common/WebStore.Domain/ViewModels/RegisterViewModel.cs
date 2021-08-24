@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace WebStore_MVC.ViewModels
     {
         [Required]
         [Display(Name ="User Name")]
+        [Remote("IsNameAvailable", "Account")]
         public string UserName { get; set; }
 
         [Required]
