@@ -42,7 +42,7 @@
         }, 500);
     },
     refreshCartView: function () {
-        var container = $("cart-container");
+        var container = $("#cart-container");
         $.get(Cart._properties.getCartViewLink)
             .done(function (cartHtml) {
                 container.html(cartHtml);
@@ -75,7 +75,7 @@
         const price = parseInt($(".cart_price", tr).data("price"));
 
         const totalPrice = price * count;
-        const value = totalPrice.toLocaleString("us-US", { style: "currency", currency: "$" });
+        const value = totalPrice.toLocaleString("us-US", { style: "currency", currency: "USD" });
         const cartTotalPrice = $(".cart_total_price", tr);
         cartTotalPrice.data("price", totalPrice);
         cartTotalPrice.html(value);
@@ -90,7 +90,7 @@
             const price = parseFloat($(this).data("price"));
             totalPrice += price;
         });
-        const value = totalPrice.toLocaleString("us-US", { style: "currency", currency: "$" });
+        const value = totalPrice.toLocaleString("us-US", { style: "currency", currency: "USD" });
 
         $("#total-order-price").html(value);
     },
