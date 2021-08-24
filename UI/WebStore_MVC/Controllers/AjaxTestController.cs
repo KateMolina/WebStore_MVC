@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore_MVC.ViewModels;
 
 namespace WebStore_MVC.Controllers
 {
@@ -12,5 +13,30 @@ namespace WebStore_MVC.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> GetJSON(int? id, string msg, int Delay = 2000)
+        {
+            await Task.Delay(Delay);
+
+            return Json(new
+            {
+                Message = $"Response(id:{id ?? 1}): {msg ?? "<null>"}",
+                ServerTime = DateTime.Now
+            });
+        }
+
+        public async Task<IActionResult> GetHTML(int? id, string msg, int Delay = 2000)
+        {
+            await Task.Delay(Delay);
+
+            return PartialView("Partial/_DataView", new AjaxTestDataViewModel
+            {
+                Id = id ?? 1,
+                Message = msg,
+            });
+        }
+
+
+
     }
 }
