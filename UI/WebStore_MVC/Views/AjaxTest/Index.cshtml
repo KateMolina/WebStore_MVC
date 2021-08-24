@@ -39,9 +39,10 @@
         </div>
         <div class="col-md-4">
             <h4>Manual Forming</h4>
-            <a class="btn btn-default">Loading</a>
 
-            <div panel-js></div>
+            <a id="load-data-button" class="btn btn-default">Loading</a>
+
+            <div id="panel-js"></div>
 
         </div>
     </div>
@@ -54,7 +55,26 @@
                         panel.empty();
                         panel.append("msg " + data.message);
                         panel.append("<br/>");
-                        panel.append("Servet time: " + data.serverTime);
+                        panel.append("Server time: " + data.serverTime);
                     }
+
+                    $("#load-data-button").click(e => {
+                        e.preventDefault();
+
+                        console.log("Starting AJAX-request to server");
+                        $.get("@Url.Action("GetJSON", "AjaxTest")", { id: 123, msg: "fromManualPanel", Delay: "100" })
+                            .done(data => {
+                                console.log("Response from server");
+
+                                const panel = $("#panel-js");
+                                panel.empty();
+                                panel.append("msg: " + data.message);
+                                panel.append("<br/>");
+                                panel.append("time: " + data.serverTime);
+                            });
+
+                    });
+
+
                 </script>
             }
