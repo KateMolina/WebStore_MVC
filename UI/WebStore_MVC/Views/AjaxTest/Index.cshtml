@@ -12,7 +12,7 @@
 
             <a class="btn btn-default"
                data-ajax="true"
-               data-ajax-url="@Url.Action("GetHTML", "AjaxTest", new { id = 42, msg = "MessageFromView", Delay = "500" })"
+               data-ajax-url="@Url.Action("GetHTML", "AjaxTest", new { id = 42, msg = "MessageFromView_serverside", Delay = "500" })"
                data-ajax-loading="#spinner-server"
                data-ajax-update="#panel-server">Loading</a>
 
@@ -24,14 +24,18 @@
         </div>
         <div class="col-md-4">
             <h4>Client-Side Rendering</h4>
-            <a class="btn btn-default">Loading</a>
+            <a class="btn btn-default"
+               data-ajax="true"
+               data-ajax-url="@Url.Action("GetJSON", "AjaxTest", new { id = 14, msg = "MessageFromView_clientside", Delay = "500" })"
+               data-ajax-loading="#spinner-client"
+               data-ajax-success="OnJSONLoaded">Loading</a>
 
             <span id="spinner-client" style="display:none">
                 <i class="fa fa-spinner fa-spin"></i>
             </span>
 
             <div id="panel-client"></div>
-
+             
         </div>
         <div class="col-md-4">
             <h4>Manual Forming</h4>
@@ -42,3 +46,15 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+                <script>
+                    OnJSONLoaded = data => {
+                        const panel = $("#panel-client");
+                        panel.empty();
+                        panel.append("msg " + data.message);
+                        panel.append("<br/>");
+                        panel.append("Servet time: " + data.serverTime);
+                    }
+                </script>
+            }
