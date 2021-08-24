@@ -18,7 +18,7 @@
             const page = button.data("page");
 
             const container = $("#catalog-items-container");
-            container.LoadingOvarlay("show");
+            container.LoadingOverlay("show");
 
             let query = "";
 
@@ -31,7 +31,7 @@
             $.get(Catalog._properties.getViewLink + "?" + query)
                 .done(catalogHtml => {
                     container.html(catalogHtml);
-                    container.LoadingOvarlay("hide");
+                    container.LoadingOverlay("hide");
 
                     $(".pagination li").removeClass("active");
                     $(".pagination li a").prop("href", "#");
@@ -41,7 +41,7 @@
                         .parent().addClass("active");
                 })
                 .fail(() => {
-                    container.LoadingOvarlay("hide");
+                    container.LoadingOverlay("hide");
                     console.log("clickOnPage fail");
                 })
 
