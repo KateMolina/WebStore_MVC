@@ -10,7 +10,11 @@
         <div class="col-md-4">
             <h4>Server-Side Rendering</h4>
 
-            <a class="btn btn-default">Loading</a>
+            <a class="btn btn-default"
+               data-ajax="true"
+               data-ajax-url="@Url.Action("GetHTML", "AjaxTest", new { id = 42, msg = "MessageFromView", Delay = "500" })"
+               data-ajax-loading="#spinner-server"
+               data-ajax-update="#panel-server">Loading</a>
 
             <span id="spinner-server" style="display:none">
                 <i class="fa fa-spinner fa-spin"></i>
