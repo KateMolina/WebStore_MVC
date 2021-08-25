@@ -127,7 +127,7 @@ namespace WebStore_MVC
                 .AddTypedClient<IOrderService, OrdersClient>();
 
             services.AddSignalR();
-
+            services.AddRazorPages();
         }
 
 
@@ -139,6 +139,7 @@ namespace WebStore_MVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
             #region else
             /* else
@@ -148,6 +149,7 @@ namespace WebStore_MVC
                app.UseHsts();
              }*/
             #endregion
+            app.UseBlazorFrameworkFiles();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -187,6 +189,8 @@ namespace WebStore_MVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapFallbackToFile("blazor.html");
             });
 
         }
