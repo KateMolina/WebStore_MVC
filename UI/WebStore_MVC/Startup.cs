@@ -32,6 +32,7 @@ using WebStore_MVC.Infrastructure.MiddleWare;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Services.InCookies;
 using WebStore_MVC.Services.Services;
+using WebStore_MVC.Hubs;
 
 namespace WebStore_MVC
 {
@@ -125,7 +126,7 @@ namespace WebStore_MVC
                 .AddTypedClient<IProductData, ProductsClient>()
                 .AddTypedClient<IOrderService, OrdersClient>();
 
-
+            services.AddSignalR();
 
         }
 
@@ -170,6 +171,9 @@ namespace WebStore_MVC
 
             app.UseEndpoints(endpoints =>
             {
+
+                endpoints.MapHub<ChatHub>("/chat");
+
                 endpoints.MapGet("/greeting", async context =>
                 {
                     await context.Response.WriteAsync(Configuration["Greeting"]);
