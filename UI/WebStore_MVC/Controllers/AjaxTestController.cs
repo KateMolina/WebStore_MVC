@@ -36,7 +36,7 @@ namespace WebStore_MVC.Controllers
             });
         }
 
-
+        public IActionResult SignalRTest() => View();
 
     }
 }  
