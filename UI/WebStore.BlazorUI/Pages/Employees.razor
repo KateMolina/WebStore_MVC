@@ -1,0 +1,43 @@
+﻿@page "/empl"
+@using WebStore.BlazorUI.Models
+@inject HttpClient Http
+
+<h3>Employees header</h3>
+
+@if (_Employees is null)
+{
+    <p>Loading data...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Last Name</th>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in _Employees)
+            {
+                <tr>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Name</td>
+                    <td>@employee.Age</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Employee[] _Employees;
+  
+
+    protected override async Task OnInitializedAsync()
+    {
+        _Employees = await Http.GetFromJsonAsync<Employee[]>("employees/getallemployees");
+    }
+
+}

@@ -109,7 +109,10 @@ namespace WebStore_MVC.Controllers
             return RedirectToAction("Index");
         }
 
-
-
+        public async Task<IEnumerable<Employee>> GetAllEmployees()
+        {
+            await Task.Delay(2000);
+           return _EmployeesData.GetAll();
+        }
     }
 }
